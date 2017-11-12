@@ -1,0 +1,126 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage{bbm}
+\usepackage{booktabs}
+\usepackage{color}
+\usepackage{caption} 
+\usepackage{enumerate}
+\usepackage{framed}
+\usepackage[margin=.75in, top = .75in]{geometry}
+\usepackage[pdftex]{graphicx}
+\usepackage{epstopdf}
+\usepackage{listings}
+\usepackage{longtable}
+\usepackage{multicol}
+\usepackage{paralist}
+\usepackage{pdfpages}
+\usepackage{setspace}
+\usepackage{subfigure}
+\usepackage{verbatim}
+\usepackage[citecolor = black]{hyperref}
+\usepackage{float}
+\usepackage{pdflscape}
+\usepackage{afterpage}
+\usepackage{graphicx}
+\usepackage{color}
+
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	filecolor=magenta,      
+	urlcolor=cyan,
+}
+
+\title{Learning \LaTeX}
+\author{Health Cohort}
+\date{\today}
+\begin{document}
+\maketitle
+\onehalfspacing
+
+\section{Introduction}
+Hello Health Cohort, this is a document typeset in \LaTeX, the standard typesetting language for academic papers. While it may seem daunting to learn how to use this language it is actually quite simple. This tutorial will lead you through creating documents so that you can go confidently forth making super professional papers.\\
+
+We will be learning to use \LaTeX \ in a service called Overleaf. This is an online editor that allows multiple people to work on the same document at the same time. This is particularly helpful for us because we will all be writing a paper together in the spring. To give you a quick understanding of what you are looking at: the left hand side of your screen is the place where you write your code. Overleaf then automatically compiles this code into a PDF document which it displays on the right side of the screen.\\
+
+The basic structure of your code is as follows; 
+
+\begin{itemize}
+\item Load packages: These are sets of functions that you can use later in your document. As you can see, I have loaded a bunch of useful ones here.
+\item Setup packages and document settings: some of the above setup includes setting link color as well as defining the title, author, and date that I want to appear at the top of this document.
+\item The line ``$\backslash$begin\{document\}'': This tells your code where to start compiling text.
+\item The body of your document: we will go deeper into this later
+\item The line ``$\backslash$end\{document\}'': This tells your code where to stop compiling text.
+\end{itemize}
+
+\section{Basic Formatting}
+
+I will attempt in this section to give a brief overview of how to do things that are particularly useful, but it is in no way a complete guide. I suggest once you have some familiarity with the language that you continually try to do things beyond your current skill level and you use Google to find code allowing you to do so. If you want to see how anything in this document is made, just look at the code on the left corresponding to the output on the right (you can do this by clicking on the thing you are interested in and Overleaf will automatically guide you to the code that produced it).\\
+
+To typeset plain text, just type it into the editor. There are many different ways to type equations. Here is some inline math: $y = mx + b$. Or I can format it as an equation:
+\begin{equation}
+U(x,y) = x^\alpha y^{1-\alpha}
+\end{equation}
+If you don't want your math to be numbered, just add asterisks: 
+\begin{equation*}
+m = p_x x + p_y y
+\end{equation*}
+
+Something useful is if you want to reference some equation: say the one below, just add a label to it in the code and then use the reference command to reference it:
+\begin{equation} \label{euler}
+e^{i\pi} + 1 = 0
+\end{equation}
+Wow, isn't Equation \ref{euler}, Euler's identity, some cool math?!
+
+\section{Your Mission}
+
+This will help you gain some familiarity. In this document
+\begin{enumerate}
+\item Create a subsection whose name is your name under section 4
+\item Create a bulleted list with the following:
+\begin{itemize}
+\item A fun joke
+\item A fun equation and reference that equation
+\item A question you have about \LaTeX \ (I will try to answer all of these as we go)
+\item Google something fun to do in \LaTeX \ and include it
+\end{itemize}
+\end{enumerate}
+
+\section{Your Work}
+
+\subsection{Eric}
+
+\begin{itemize}
+\item My Joke: What did $0$ say to $8$? ... Nice Belt!!
+\item Equation \ref{pc} is fun. It's a utility function for perfect complements
+\begin{equation}\label{pc}
+U(x,y) = \min\{x,y\}.
+\end{equation}
+\item Something fun I can type: \emph{Eric}. It's my name in italics!
+\end{itemize}
+
+
+\subsection{Leah}
+
+\begin{itemize}
+\item My Joke: 
+   While looking up funny econ jokes, I found not funny ones.
+	\begin{itemize}
+    	\item The First Law of Economists: For every economist, there exists an equal and opposite economist.
+    	\item The Second Law of Economists: They’re both wrong.
+    \end{itemize} 
+    Anyways, everyone is really cool! Stay cool and study econ 
+       
+
+\item I really like the {quadartic} equation! Because it's the first one I thought of
+\begin{equation} \label{quadratic}
+\frac{b^2-\sqrt{4ac}}{2a}
+\end{equation}
+\color{blue}
+\item I can write things in different colors! 
+\end{itemize}
+
+\end{document}
