@@ -12,6 +12,8 @@ while(basename(root) != "Oeconomica-Health-Cohort") {
   root <- dirname(root)
 }
 
+root <- "C:/Users/devin/Documents/Oeconomica-Health-Cohort"
+
 # This line runs the script in your data.R file so that each person can have
 # their data in a different place because everyone's file structure will be 
 # a little differnt
@@ -28,7 +30,7 @@ library(tidyr)
 library(stringr)
 
 # This is the step where I actually import the data
-df <- read.csv(file.path(ddir, "nhis_00001.csv.gz"))
+df <- read.csv(file.path(ddir, "nhis_00001.csv"))
 
 
 #----------------------------------
