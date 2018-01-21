@@ -93,9 +93,39 @@ df_clean <-
   df %>%
   left_join(sex_codebook, by = "SEX")
 
-# Now you try recoding education in a sensible way
+                                        # Now you try recoding education in a sensible way
 
+educ_codebook <-
+    tibble(EDUC = c(00,01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,96,97,99),
+           educ_clean = c("None/Kindergarten",
+                          "Some Grade School",
+                          "Some Grade School",
+                          "Some Grade School",
+                          "Some Grade School",
+                          "Grade School",
+                          "Some Middle School",
+                          "Some Middle School",
+                          "Middle School",
+                          "Some High School",
+                          "Some High School",
+                          "Some High School",
+                          "Some High School",
+                          "GED",
+                          "High School",
+                          "Some College",
+                          "Associate Degree: Technical",
+                          "Associate Degree: Academic",
+                          "Bachelor's",
+                          "Master's",
+                          "Professional School",
+                          "Doctoral Degree",
+                          "Child under 5",
+                          "Refused",
+                          "Unknown"))
 
+df_clean <-
+    df_clean %>%
+    left_join(educ_codebook, by = "EDUC")
 
 
 
