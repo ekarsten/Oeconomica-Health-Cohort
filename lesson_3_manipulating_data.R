@@ -19,6 +19,13 @@ source(file.path(root, "data.R"))
 
 
 # These are some fantastic packages that I always load in
+#install.packages("dplyr")
+#install.packages("ggplot2")
+#install.packages("lubridate")
+#install.packages("knitr")
+#install.packages("purrr")
+#install.packages("tidyr")
+#install.packages("stringr")
 library(dplyr)
 library(ggplot2)
 library(lubridate)
@@ -28,7 +35,7 @@ library(tidyr)
 library(stringr)
 
 # This is the step where I actually import the data
-df <- read.csv(file.path(ddir, "nhis_00001.csv.gz"))
+df <- read.csv(file.path(ddir, "nhis_00001.csv"))
 
 
 #----------------------------------
