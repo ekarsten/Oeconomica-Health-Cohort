@@ -28,8 +28,8 @@ library(tidyr)
 library(stringr)
 
 # This is the step where I actually import the data
+# ddir <-  "/Users/Pooja/Desktop/Oeconomica"
 df <- read.csv(file.path(ddir, "nhis_00001.csv.gz"))
-
 
 #----------------------------------
 # Selecting data
@@ -71,9 +71,29 @@ slim_df_sex_one <-
 # As you can see, this last one is a bit of a pain to read and clearly see what 
 # is going on. Now try some out for yourself:
 
+slim_df_year_2016 <-
+  df %>%
+  select(YEAR, AGE, EDUC, HEALTH) %>%
+  filter(YEAR == 2016)
+
+slim_df_age_health <-
+  slim_df %>%
+  filter(AGE == 20 & HEALTH == 1)
+
 # Select a different set of variables, explore the way they are coded using the 
 # above summary statistics tools, and select some interesting subset
 
+unique(df$YEAR)
+
+[1] 2000 2001 2002 2003 2004 2005 2006 2007 2008 2009 2010 2011 2012 2013 2014 2015 2016
+
+summary(df$STRATA)
+
+Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+5001    5229    6080    5859    6215    7151 
+
+slim_df_strata_year <-
+  filter(select(df, YEAR, AGE, EDUC, STRATA), STRATA == 7151 & YEAR == 2016)
 
 #--------------------------------
 # Recoding data
@@ -95,9 +115,21 @@ df_clean <-
 
 # Now you try recoding education in a sensible way
 
+educ_codebook <-
+  tibble(EDUC = c(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,97,98,99),
+         educ_clean = c("NIU","Never attended/kindergarten only", "Grade 1", "Grade 2", 
+                       "Grade 3", "Grade 4", "Grade 5", "Grade 6", "Grade 7", "Grade 8",
+                       "Grade 9", "Grade 10", "Grade 11", "12th grade, no diploma", 
+                       "High school graduate", "GED or equivalent", "Some college, no degree",
+                       "AA degree: technical/vocational/occupational", 
+                       "AA degree: academic program", "Bachelor's degree (BA,AB,BS,BBA)",
+                       "Master's degree (MA,MS,Med,MBA)", "Professional (MD,DDS,DVM,JD)",
+                       "Doctoral degree (PhD, EdD)", "Unknown--refused", 
+                       "Unknown--not ascertained", "Unknown--don't know"))
 
-
-
+df_clean1 <-
+  df %>%
+  left_join(educ_codebook, by = "EDUC")
 
 
 
