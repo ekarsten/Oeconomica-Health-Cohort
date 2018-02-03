@@ -12,6 +12,7 @@ while(basename(root) != "Oeconomica-Health-Cohort") {
   root <- dirname(root)
 }
 
+# Loop wasn't working for me
 root <- "C:/Users/devin/Documents/Oeconomica-Health-Cohort"
 
 # This line runs the script in your data.R file so that each person can have
@@ -28,6 +29,7 @@ library(knitr)
 library(purrr)
 library(tidyr)
 library(stringr)
+library(measurements)
 
 # This is the step where I actually import the data
 df <- read.csv(file.path(ddir, "nhis_00001.csv"))
@@ -75,6 +77,21 @@ slim_df_sex_one <-
 
 # Select a different set of variables, explore the way they are coded using the 
 # above summary statistics tools, and select some interesting subset
+
+my_df <-
+  df %>%
+  select(AGE, HEIGHT, WEIGHT)
+
+summary(my_df$HEIGHT)
+
+my_df$WEIGHT_KG = conv_unit(my_df$WEIGHT, "lbs", "kg")
+my_df$HEIGHT_CM = conv_unit(my_df$HEIGHT, "inch", "cm")
+
+my_df$BMI = with(my_df, WEIGHT_KG/(HEIGHT_CM/100)^2)
+
+slim_df_overweight <-
+  my_df %>%
+  filter(BMI > 25 & BMI < 40)
 
 
 #--------------------------------
