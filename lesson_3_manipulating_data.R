@@ -13,7 +13,7 @@ while(basename(root) != "Oeconomica-Health-Cohort") {
 }
 
 # Loop wasn't working for me
-root <- "C:/Users/devin/Documents/Oeconomica-Health-Cohort"
+#root <- "C:/Users/devin/Documents/Oeconomica-Health-Cohort"
 
 # This line runs the script in your data.R file so that each person can have
 # their data in a different place because everyone's file structure will be 
