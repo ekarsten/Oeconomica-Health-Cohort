@@ -115,8 +115,37 @@ df_clean <-
 # Now you try recoding education in a sensible way
 
 
+educ_codebook <-
+  tibble(EDUC = c(00,01,02,03.,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,
+                  19,20,21,22,97,98,99),
+         educ_clean = c("NIU", "Never attended/kindergarten only",
+                       "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5",
+                       "Grade 6", "Grade 7", "Grade 8", "Grade 9",
+                       "Grade 10", "Grade 11", "12th grade, no diploma",
+                       "High school graduate",
+                       "GED or equivalent", "Some college, no degree",
+                       "AA degree: technical/vocational/occupational",
+                       "AA degree: academic program",
+                       "Bachelor's degree (BA,AB,BS,BBA",
+                       "Master's degree (MA,MS,Med,MBA)", 
+                       "Professional (MD,DDS,DVM,JD", 
+                       "Doctoral degree (PhD,EdD)", "Unknown--refused",
+                       "Unknown--not ascertained", "Unknown--don't know"))
 
 
+df_clean <-
+  df %>%
+  left_join(educ_codebook, by = "EDUC")
+
+health_codebook <-
+  tibble(HEALTH = c(1,2,3,4,5,7,8,9),
+         health_clean = c("Excellent","Very Good", "Good", "Fair", "Poor", 
+                       "Unknown-refused", "Unknown-not ascertained", 
+                       "Unknown-don't know"))
+
+df_clean <-
+  df %>%
+  left_join(health_codebook, by = "HEALTH")
 
 
 
