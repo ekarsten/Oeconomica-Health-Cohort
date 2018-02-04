@@ -19,7 +19,13 @@ source(file.path(root, "data.R"))
 
 
 # These are some fantastic packages that I always load in
-
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+library(knitr)
+library(purrr)
+library(tidyr)
+library(stringr)
 
 # This is the step where I actually import the data
 df <- read.csv(file.path(ddir, "nhis_00001.csv.gz"))
@@ -68,6 +74,15 @@ slim_df_sex_one <-
 # Select a different set of variables, explore the way they are coded using the 
 # above summary statistics tools, and select some interesting subset
 
+unique(df$EDUC)
+
+summary(df$EDUC)
+
+slim_df_educ_14 <-
+  slim_df %>%
+  filter(EDUC == 14)
+
+
 
 #--------------------------------
 # Recoding data
@@ -89,11 +104,15 @@ df_clean <-
 
 # Now you try recoding education in a sensible way
 
+educ_codebook<-
+  tibble(EDUC = c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,27,97,98,99),
+         educ_clean = c("Never/Kindergarten","Elementary","Elementary","Elementary","Elementary","Elementary","Middle","Middle","Middle","High","High","High","High","High","College","College","College","College","College","Professional","Professional","Professional","Professional","Unknown","Unknown","Unknown"))
 
+df_clean <-
+  df %>%
+  left_join(educ_codebook, by = "EDUC")
 
 #hello world testing testing blue world what am I doing testing testing
-
-summary(df)
 
 
 
