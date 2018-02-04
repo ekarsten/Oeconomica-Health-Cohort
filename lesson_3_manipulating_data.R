@@ -76,6 +76,15 @@ slim_df_sex_one <-
 # Select a different set of variables, explore the way they are coded using the 
 # above summary statistics tools, and select some interesting subset
 
+slim_df <-
+  df %>%
+  select(HEIGHT, WEIGHT, SSDISABL)
+
+summary(df$HEIGHT)
+
+slim_df_weight <-
+  slim_df %>%
+  filter(WEIGHT<100)
 
 #--------------------------------
 # Recoding data
@@ -98,8 +107,14 @@ df_clean <-
 # Now you try recoding education in a sensible way
 
 
+educ_codebook <-
+  tibble(EDUC = c(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,97,98),
+         educ_clean = c("NIU","KOnly","1stGrade","2ndGrade","3rdGrade","4thGrade","5thGrade","6thGrade","7thGrade","8thGrade","9thGrade","10thGrade","11thGrade","12NoGrad","HSDip","GED","SomeCollege","AATech","AAAca","BABS","MAMS","MDJD","PhDEdD","Ref","Unknown"))
 
 
+df_clean <-
+  df %>%
+  left_join(educ_codebook, by = "EDUC")
 
 
 
