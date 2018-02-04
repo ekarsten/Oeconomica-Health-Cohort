@@ -19,6 +19,8 @@ source(file.path(root, "data.R"))
 
 
 # These are some fantastic packages that I always load in
+# You will need to run "install.packages()" with the name of each package
+# For example, to install dplyr, run "install.packages("dplyr")"
 library(dplyr)
 library(ggplot2)
 library(lubridate)
