@@ -81,6 +81,11 @@ slim_df_sex_one <-
 # Select a different set of variables, explore the way they are coded using the 
 # above summary statistics tools, and select some interesting subset
 
+slim_df_educ_one <-
+  df %>%
+  select(AGE, SEX, EDUC, HEALTH) %>%
+  filter(EDUC == 14)
+
 
 #--------------------------------
 # Recoding data
@@ -102,7 +107,15 @@ df_clean <-
 
 # Now you try recoding education in a sensible way
 
+health_codebook <-
+  tibble(HEALTH = c(1,2,3),
+         health_clean = c("Healthy", "Not-healthy", "Very Unhealthy"))
 
+# Then merge in the new codings into the dataset:
+
+df_clean <-
+  df %>%
+  left_join(health_codebook, by = "HEALTH")
 
 
 
