@@ -19,13 +19,7 @@ source(file.path(root, "data.R"))
 
 
 # These are some fantastic packages that I always load in
-library(dplyr)
-library(ggplot2)
-library(lubridate)
-library(knitr)
-library(purrr)
-library(tidyr)
-library(stringr)
+
 
 # This is the step where I actually import the data
 df <- read.csv(file.path(ddir, "nhis_00001.csv.gz"))
@@ -97,7 +91,9 @@ df_clean <-
 
 
 
-#hello world
+#hello world testing testing blue world what am I doing testing testing
+
+summary(df)
 
 
 
