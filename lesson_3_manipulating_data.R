@@ -116,6 +116,10 @@ df_clean <-
   df %>%
   left_join(educ_codebook, by = "EDUC")
 
+slim_df_clean <-
+  df_clean %>%
+  filter(EDUC>14)
+
 
 
 
