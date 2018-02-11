@@ -121,8 +121,14 @@ slim_df %>%
 #   select(AGE, SEX, EDUC, HEALTH, HRSLEEP)
 
 new_df <- 
-  subset(df, HRSLEEP >= 01 | HRSLEEP < 24, 
-                            select=c(AGE, SEX, EDUC, HEALTH))
+  subset(df, HRSLEEP >= 01 & HRSLEEP < 24, 
+                            select=c(AGE, SEX, EDUC, HEALTH, HRSLEEP))
+new_df <-
+  df %>%
+  select(AGE, SEX, EDUC, HEALTH, HRSLEEP) %>%
+  filter(HRSLEEP >= 1,
+         HRSLEEP < 24)
+
 
 df_my_var <-
   new_df %>%
