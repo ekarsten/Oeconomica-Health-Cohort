@@ -111,9 +111,31 @@ slim_df %>%
 
 # Please use the space below to write some code to make some cool summary tables
 
+slim_df %>%
+  group_by (WEIGHT) %>%
+  summarise(number = n())
+
+slim_df %>%
+  group_by (EDUC, WEIGHT) %>%
+  summarise(number = n()) %>%
+  spread(key = EDUC, value = number)
 
 
+slim_df %>%
+  filter(EDUC<30) %>%
+  group_by(EDUC) %>%
+  summarise(AVG_WEIGHT = mean(WEIGHT)) %>%
+  ggplot(aes(x = EDUC, y = AVG_WEIGHT)) +
+  geom_point()
 
+slim_df_new <-
+  slim_df %>%
+  select(AGE, EDUC)
+
+slim_df_new %>%
+  group_by(AGE) %>%
+  ggplot(aes(x = AGE, y = EDUC)) +
+  geom_point()
 
 
 
