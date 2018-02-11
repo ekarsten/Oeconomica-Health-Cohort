@@ -52,12 +52,21 @@ slim_df <-
 
 df_new_vars <-
   slim_df %>%
-  mutate(BMI = WEIGHT/HEIGHT,
+  mutate(BMI = WEIGHT/HEIGHT, #Mutate adds new variables and preserves existing; transmute drops existing variables.
          discounted_health = HEALTH/AGE)
   
 # Now go find some interesting variables in the dataset and make some new variables
 # using mutate
 
+df_new_WOA <-
+  slim_df %>%
+  mutate(WOA = WEIGHT/AGE,
+         discounted_health = HEALTH/AGE)
+
+df_new_HOA <-
+  slim_df %>%
+  mutate(HOA = HEIGHT/AGE,
+         discounted_health = HEALTH/AGE)
 
 #--------------------------------
 # Making evan more exciting tables using summarise
@@ -114,6 +123,32 @@ slim_df %>%
 
 
 
+
+# Table that counts the number of people who have a certain educational status
+slim_df %>%
+  group_by(EDUC) %>%
+  summarise(number = n())
+#same counts broken down by gender, spread into a wider table
+slim_df %>%
+  group_by(SEX, EDUC) %>%
+  summarise(number = n())%>%
+  spread(key = SEX, value = number)
+# Group by age and summarize the mean rating of health for each education status
+slim_df %>%
+  group_by(EDUC) %>%
+  summarise(AVG_HEALTH = mean(HEALTH))
+# For a sneak peek into next week's tutorial, let's make a figure out of this!
+slim_df %>%
+  group_by(EDUC) %>%
+  summarise(AVG_HEALTH = mean(HEALTH)) %>%
+  ggplot(aes(x = EDUC, y = AVG_HEALTH)) +
+  geom_point()
+
+slim_df %>%
+  group_by(AGE) %>%
+  summarise(AVG_EDUC = mean(EDUC)) %>%
+  ggplot(aes(x = AGE, y = AVG_EDUC)) +
+  geom_point()
 
 
 

@@ -114,6 +114,10 @@ df_clean <-
   df %>%
   left_join(educ_codebook, by = "EDUC")
 
+slim_df_sex_one <-
+  slim_df %>%
+  filter(SEX == 1)
+
 #hello world testing testing blue world what am I doing testing testing
 
 
