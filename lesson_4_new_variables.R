@@ -58,6 +58,11 @@ df_new_vars <-
 # Now go find some interesting variables in the dataset and make some new variables
 # using mutate
 
+df_my_var <-
+  df %>%
+  mutate(quality = AGE/HRSLEEP,
+         quantity = SEX/EDUC)
+
 
 #--------------------------------
 # Making evan more exciting tables using summarise
@@ -111,12 +116,28 @@ slim_df %>%
 
 # Please use the space below to write some code to make some cool summary tables
 
+# new_df <- 
+#   df %>%
+#   select(AGE, SEX, EDUC, HEALTH, HRSLEEP)
 
+new_df <- 
+  subset(df, HRSLEEP >= 01 | HRSLEEP < 24, 
+                            select=c(AGE, SEX, EDUC, HEALTH))
 
+df_my_var <-
+  new_df %>%
+  mutate(life = AGE/HRSLEEP) 
 
+new_df %>%
+  group_by(AGE , HRSLEEP) %>%
+  summarise(number = n()) %>%
+  spread(key = AGE, value = number)
 
-
-
+new_df %>%
+  group_by(AGE) %>%
+  summarise(AVG_HRSLEEP = mean(HRSLEEP)) %>%
+  ggplot(aes(x = AGE, y = AVG_HRSLEEP)) +
+  geom_point()
 
 
 
