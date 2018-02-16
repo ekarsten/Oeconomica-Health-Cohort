@@ -76,8 +76,18 @@ slim_df_sex_one <-
 # Select a different set of variables, explore the way they are coded using the 
 # above summary statistics tools, and select some interesting subset
 
+unique(df$EDUC)
+summary(df$EDUC)
 
-#fun thing!
+slim_df_health_2 <-
+  df %>% 
+  select(AGE, SEX, EDUC, HEALTH) %>% 
+  filter(HEALTH >= 2)
+
+slim_df_health_2
+
+unique(df$HEALTH)
+summary(df$HEALTH)
 
 #--------------------------------
 # Recoding data
@@ -98,6 +108,10 @@ df_clean <-
   left_join(sex_codebook, by = "SEX")
 
 # Now you try recoding education in a sensible way
+education_codebook <- 
+  tibble(EDUC = c(0-13, 14-15))
+      educ_clean = c("Some High School", "High School Level","Some College", "Associate's Degree", "Bachelor's Degree", "Master's Degree", "Professoional Degree", "Doctoral Degree", "Unknown")
+      
 
 
 
