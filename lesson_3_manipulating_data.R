@@ -109,18 +109,15 @@ df_clean <-
 
 # Now you try recoding education in a sensible way
 education_codebook <- 
-  tibble(EDUC = c(0-13, 14-15))
-      educ_clean = c("Some High School", "High School Level","Some College", "Associate's Degree", "Bachelor's Degree", "Master's Degree", "Professoional Degree", "Doctoral Degree", "Unknown")
-      
+  tibble( EDUC = c(0:9, 10:13, 14:15, 16, 17:18, 19, 20, 21, 22),
+          educ_clean = c("Less than HS", "Less than HS", "Less than HS", "Less than HS",
+                         "Less than HS","Less than HS","Less than HS","Less than HS","Less than HS",
+                         "Less than HS",   "Some HS",  "Some HS",  "Some HS",
+                         "Some HS", "High School", "High School", "Some College", "Associate's",
+                         "Associate's",
+                         "Bachelor's", "Master's", "Professional", "Doctoral"))
 
-
-
-
-
-
-
-
-
-
-
-
+df_clean <- 
+  df %>% 
+  left_join(education_codebook, by = "EDUC")
+df_clean
