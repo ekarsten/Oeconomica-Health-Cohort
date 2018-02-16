@@ -58,9 +58,21 @@ df_new_vars <-
 # Now go find some interesting variables in the dataset and make some new variables
 # using mutate
 
+df_new_age <- 
+  slim_df %>% 
+  mutate( WeightProp = WEIGHT/AGE)
+
+df_new_age$WeightProp
+
+df_new_age <- 
+  slim_df %>% 
+  mutate (healthThings = (HEIGHT + WEIGHT)/(HEALTH))
+
+df_new_age$healthThings
+
 
 #--------------------------------
-# Making evan more exciting tables using summarise
+# Making even more exciting tables using summarise
 #--------------------------------
 
 # Sometimes we want to change the way we are looking at information about data,
@@ -110,7 +122,24 @@ slim_df %>%
 
 
 # Please use the space below to write some code to make some cool summary tables
+slim_df %>%  #This is taking the "slim" data frame, which only has a few parameters in it
+  group_by(SEX, EDUC) %>% #Then it is grouping them by sex, and education 
+  summarise(number = n()) %>%
+  spread(key = SEX, value = number) ##This changed the data so that you can count how many
+                                    ## of each sex fall into each level of education
 
+newdata <- mydata[c(-3,-5)]
+
+educ_mod <- slim_df$EDUC[c(-97,-98,-99)] ## I want to figure out how to omit the 'unknown' 
+                                         ## from the education 
+
+
+slim_df %>% 
+  group_by(EDUC) %>%
+  summarise(AVG_HEALTH = mean(HEALTH)) %>% 
+  ggplot(aes (x = EDUC, y = AVG_HEALTH )) +
+  geom_point()
+                
 
 
 
