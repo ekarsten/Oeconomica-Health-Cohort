@@ -17,6 +17,8 @@ while(basename(root) != "Oeconomica-Health-Cohort") {
 # a little differnt
 source(file.path(root, "data.R"))
 
+root <- "C:/Users/devin/Documents/Oeconomica-Health-Cohort"
+
 
 # These are some fantastic packages that I always load in
 # You will need to run "install.packages()" with the name of each package
@@ -30,7 +32,7 @@ library(tidyr)
 library(stringr)
 
 # This is the step where I actually import the data
-df <- read.csv(file.path(ddir, "nhis_00001.csv.gz"))
+df <- read.csv(file.path(ddir, "nhis_00001.csv"))
 
 
 #A little bit of data cleaning before we begin
@@ -105,3 +107,11 @@ slim_df %>%
        fill = "Health Level")
 
 # Now you make some awesome faceted plots below!!
+
+
+slim_df %>%
+  filter(WEIGHT != 0, WEIGHT < 990) %>%
+  sample(100, replace = TRUE) %>%
+  ggplot(aes(x = WEIGHT, y = HEIGHT)) +
+  geom_bin2d() 
+  #labs(title = "Density of Weight")
