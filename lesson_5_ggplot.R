@@ -108,10 +108,20 @@ slim_df %>%
 
 # Now you make some awesome faceted plots below!!
 
+bmi_n1 <- function(x) {sqrt(x*(703/18.5))}
+bmi_n2 <- function(x) {sqrt(x*(703/25))}
+bmi_n3 <- function(x) {sqrt(x*(703/30))}
+
 
 slim_df %>%
   filter(WEIGHT != 0, WEIGHT < 990) %>%
-  sample(100, replace = TRUE) %>%
+  filter(HEIGHT != 0, HEIGHT < 95) %>%
+  #sample(10000, replace = TRUE) %>%
   ggplot(aes(x = WEIGHT, y = HEIGHT)) +
-  geom_bin2d() 
-  #labs(title = "Density of Weight")
+  geom_bin2d(binwidth = c(10, 1)) +
+  ylim(57, 77) +
+  stat_function(fun = bmi_n1, colour = "green") +
+  stat_function(fun = bmi_n2, colour = "green") +
+  stat_function(fun = bmi_n3, colour = "yellow") 
+  #geom_ribbon(aes(ymin=bmi_n1,ymax=bmi_n2), fill="blue", alpha="0.5") 
+ 
