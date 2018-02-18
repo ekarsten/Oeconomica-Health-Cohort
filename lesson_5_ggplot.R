@@ -83,6 +83,58 @@ slim_df %>%
 # Now it's your turn to write some code that makes a beautiful plot that impresses me
 # Be sure to use point geometry in one plot and histogram geometry in another
 
+sex_codebook <-
+  tibble(SEX = c(1,2),
+         sex_clean = c("Male","Female"))
+
+age_codebook <- 
+  tibble(AGE = c(18:85),
+         age_clean = c(rep("20s", 12),
+                        rep("30s", 10),
+                        rep("40s", 10),
+                        rep("50s", 10),
+                        rep("60s", 10),
+                        rep("70s", 10),
+                        rep("80s", 6)
+         )
+  )
+
+sleep_codebook <- 
+  tibble(HRSLEEP = c(01:15),
+         sleep_clean = c(rep("5<", 5),
+                       rep("5-10", 5),
+                       rep("10-15", 5)
+         )
+  )
+
+
+new_df <- 
+  df %>%
+  select(AGE, SEX, EDUC, HEALTH, HRSLEEP) %>%
+  filter(HRSLEEP >= 1,
+         HRSLEEP < 24) %>%
+  mutate(life = AGE/HRSLEEP) %>%
+  left_join(sex_codebook, by = "SEX") %>%
+  left_join(educ_codebook, by = "EDUC") %>%
+  left_join(age_codebook, by = "AGE") %>%
+  left_join(sleep_codebook, by = "HRSLEEP") 
+
+
+new_df %>%
+  ggplot(aes(x = HRSLEEP)) +
+  geom_histogram(binwidth = 1) +
+  labs(title = "Histogram of Sleep in NHIS survey sample")
+
+new_df %>%
+  ggplot(aes(x = HRSLEEP, fill = sex_clean)) +
+  geom_density(alpha = .6) +
+  labs(title = "Density of Sleep by Gender")
+
+new_df %>%
+  filter(age_clean %in% c("20s","80s")) %>%
+  ggplot(aes(x = HRSLEEP, fill = age_clean)) +
+  geom_density(alpha = .6) +
+  labs(title = "Density of Sleep by Age")
 
 #--------------------------------
 # Faceting with ggplot
@@ -104,4 +156,28 @@ slim_df %>%
        x = "Education Level",
        fill = "Health Level")
 
+#dot means nothing. sex_clean is vertical, tilda is to seperate vertical form horizontal
+#angle is for labels on plot
+#count is wrong since those a proportions, so label it as prop
+
 # Now you make some awesome faceted plots below!!
+
+new_df %>%
+  ggplot(aes(age_clean, fill = as.character(sleep_clean))) +
+  geom_bar(position = "fill") +
+  facet_grid(sex_clean ~ .) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Proportion reporting each sleep level by Age and gender",
+       y = "Proportion",
+       x = "Age",
+       fill = "Sleep")
+
+new_df %>%
+  ggplot(aes(age_clean, fill = as.character(sleep_clean))) +
+  geom_crossbar(position = "fill") +
+  facet_grid(sex_clean ~ .) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Proportion reporting each sleep level by Age and gender",
+       y = "Proportion",
+       x = "Age",
+       fill = "Sleep")
