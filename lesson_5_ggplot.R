@@ -78,6 +78,14 @@ slim_df %>%
   geom_density(alpha = .6) +
   labs(title = "Density of Age by Gender")
 
+<<<<<<< HEAD
+=======
+slim_df %>%
+  ggplot(aes(x = sex_clean, y = AGE)) +
+  geom_violin() +
+  labs(title = "Violin density of Age by Gender")
+
+>>>>>>> 2c6134c088b2e68f30f7ba9869b5a0879908abb7
 # I couldn't think of a useful scatter plot, but the geometry for that is geom_point()
   
 # Now it's your turn to write some code that makes a beautiful plot that impresses me
