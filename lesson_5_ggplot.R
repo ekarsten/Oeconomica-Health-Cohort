@@ -48,12 +48,29 @@ educ_codebook <-
                         )
          )
 
+weight_codebook <- 
+  tibble(WEIGHT = c(0:999),
+         weight_clean = c(NA,
+                        1:499,
+                        rep(NA, 500)
+         )
+  )
+
+
+height_codebook <- 
+  tibble(HEIGHT = c(0:99),
+         height_clean = c(1:95, rep(NA,5)
+         )
+  )
+
 slim_df <-
   df %>%
   select(AGE, SEX, EDUC, HEALTH, HEIGHT, WEIGHT) %>%
-  mutate(BMI = WEIGHT/HEIGHT) %>%
+  left_join(height_codebook, by = "HEIGHT") %>%
+  left_join(weight_codebook, by = "WEIGHT") %>%
   left_join(sex_codebook, by = "SEX") %>%
-  left_join(educ_codebook, by = "EDUC")
+  left_join(educ_codebook, by = "EDUC") %>%
+  mutate(BMI = weight_clean/height_clean)
 
 
 #----------------------------------
@@ -66,13 +83,17 @@ slim_df <-
 # Then we tell ggplot the geometry of the figure we would like it to create
 # Finally, we specify other options about our plot, such as labels or the scale
 
+## ggplot makes really nice pretty plots!!
+##piping sends stuff from one place to another, within ggplots, can use plus or minus signs.
+##geom makes it a 
 slim_df %>%
   ggplot(aes(x = AGE)) +
   geom_histogram(binwidth = 1) +
   labs(title = "Histogram of Age in NHIS survey sample")
 
 # Now let's do something fancy and estimate age density functions by gender
-
+##Not surprising that sampled more older women than older men, since women live longer.
+##Not surprising lots of kids bc survey lots of households
 slim_df %>%
   ggplot(aes(x = AGE, fill = sex_clean)) +
   geom_density(alpha = .6) +
@@ -93,15 +114,60 @@ slim_df %>%
 
 # Below I will compare gender and education differences in the histograms of BMI in
 # our sample using a technique called faceting:
-
 slim_df %>%
   ggplot(aes(educ_clean, fill = as.character(HEALTH))) +
-  geom_bar(position = "fill") +
+  #proportion of people in diff categories of education 
+  #and gender that report a health
+  geom_bar(position = "fill") + 
+  #fills the thing to the very top, easier to make relative comparisons 
+  #between the education columsn. Try without this bit only empty parenteses
   facet_grid(sex_clean ~ .) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  #  facet_grid(.~ sex_clean ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +#tilts the labesl at 45 degree angle so don't get crunched
   labs(title = "Proportion reporting each health level by education and gender",
        y = "Proportion",
        x = "Education Level",
-       fill = "Health Level")
+       fill = "Health Level") #all the titles
+
 
 # Now you make some awesome faceted plots below!!
+
+slim_df %>%
+  ggplot(aes(AGE, fill = as.character(HEALTH))) +
+  geom_bar(position = "fill") + 
+  facet_grid(sex_clean ~ .) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(title = "Proportion reporting each health level by age and gender",
+       y = "Proportion",
+       x = "Age",
+       fill = "Health Level")
+
+
+
+
+
+
+
+slim_df %>%
+  ggplot(aes(x = HEIGHT)) +
+  geom_histogram(binwidth = 1) +
+  labs(title = "Histogram of HEIGHT in NHIS survey sample")
+slim_df %>%
+  ggplot(aes(x = WEIGHT)) +
+  geom_histogram(binwidth = 1) +
+  labs(title = "Histogram of WEIGHT in NHIS survey sample")
+
+slim_df %>%
+  ggplot(aes(BMI, fill = as.character(HEALTH))) +
+  geom_bar(position = "fill") + 
+  facet_grid(sex_clean ~ .) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Proportion reporting each Health level by BMI and gender",
+       y = "Proportion",
+       x = "BMI Level",
+       fill = "Health Level")
+
+
+
+
+
