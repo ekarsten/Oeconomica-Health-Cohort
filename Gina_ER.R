@@ -31,3 +31,24 @@ library(stringr)
 
 # This is the step where I actually import the data
 df <- read.csv(file.path(ddir, "health_cohort_data.csv"))
+
+
+slim_df <-
+  df %>%
+  select(ASTATFLG, CSTATFLG, SEX, MARSTAT, RELATE, FAMSTRUC1F, PARENTHERE, RACEA, HISPETH, EDUC, EMPSTAT, HOURSWRK, SECONDJOB, POORYN, INCFAM97ON2, WELFMO,ERYRNO,DELAYCOST)
+
+delaycost_codebook <-
+  tibble(DELAYCOST = c(1,2,0,7,8,9 ),
+         delaycost_clean = c("No","Yes",NA,NA,NA,NA))
+
+df_clean <-
+  df %>%
+  left_join(delaycost_codebook, by = "DELAYCOST")
+
+slim_df_clean <-
+  df %>%
+  left_join(delaycost_codebook, by = "DELAYCOST")
+
+
+
+
