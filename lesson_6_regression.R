@@ -92,3 +92,46 @@ stargazer(model_2,type = "text")
 
 
 # Now go try out some cool and interesting things on your own!
+sex_codebook <-
+  tibble(SEX = c(1,2),
+         sex_clean = c("Male","Female"))
+
+age_codebook <- 
+  tibble(AGE = c(18:85),
+         age_clean = c(rep("20s", 12),
+                       rep("30s", 10),
+                       rep("40s", 10),
+                       rep("50s", 10),
+                       rep("60s", 10),
+                       rep("70s", 10),
+                       rep("80s", 6)
+         )
+  )
+
+sleep_codebook <- 
+  tibble(HRSLEEP = c(01:15),
+         sleep_clean = c(rep("5<", 5),
+                         rep("5-10", 5),
+                         rep("10-15", 5)
+         )
+  )
+
+
+new_df <- 
+  df %>%
+  select(AGE, SEX, EDUC, HEALTH, HRSLEEP) %>%
+  filter(HRSLEEP >= 1,
+         HRSLEEP < 24) %>%
+  mutate(life = AGE/HRSLEEP) %>%
+  left_join(sex_codebook, by = "SEX") %>%
+  left_join(educ_codebook, by = "EDUC") %>%
+  left_join(age_codebook, by = "AGE") %>%
+  left_join(sleep_codebook, by = "HRSLEEP") 
+
+model_3 <- lm(HRSLEEP ~ sex_clean + AGE, data = new_df)
+
+stargazer(model_3,type = "text")
+
+model_4 <- lm(HRSLEEP ~ sex_clean * AGE, data = new_df)
+
+stargazer(model_4,type = "text")
