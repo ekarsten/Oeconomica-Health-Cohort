@@ -105,3 +105,61 @@ slim_df %>%
        fill = "Health Level")
 
 # Now you make some awesome faceted plots below!!
+
+slim_df %>%
+  filter(WEIGHT != 0, WEIGHT < 900) %>%
+  ggplot(aes(x = WEIGHT)) +
+  geom_histogram(binwidth = 1) +
+  labs(title = "weight")
+
+slim_df %>%
+  filter(WEIGHT != 0, WEIGHT < 900) %>%
+  ggplot(aes(x = WEIGHT, fill = educ_clean)) +
+  geom_density(binwidth = 1) +
+  labs(title = "weight")
+
+slim_df %>%
+  ggplot(aes(x = educ_clean, fill = sex_clean)) +
+  geom_density(binwidth = 1) +
+  labs(title = "title")
+
+slim_df %>%
+  ggplot(aes(sex_clean, y = as.character(EDUC))) +
+  geom_boxplot(sex_codebook, EDUC)
+  facet_grid(educ_clean ~ .) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "title",
+       y = "y-axis",
+       x = "x-axis",
+       fill = "fill")
+
+slim_df %>%
+  ggplot(aes(sex_clean, y = as.character(HEIGHT))) +
+  geom_dotplot(position = "fill") +
+  facet_grid(HEIGHT ~ .) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "title",
+       y = "y-axis",
+       x = "x-axis",
+       fill = "fill")
+
+slim_df %>%
+  ggplot(aes(educ_clean, fill = as.character(HEALTH))) +
+  geom_bar(position = "stack") +
+  facet_grid(sex_clean ~ .) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Proportion reporting each health level by education and gender",
+       y = "Proportion",
+       x = "Education Level",
+       fill = "Health Level")
+
+slim_df %>%
+  ggplot(aes(sex_clean, HEIGHT)) +
+  geom_bar(stat = "identity") +
+  facet_grid(sex_clean ~ .) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Proportion reporting each health level by education and gender",
+       y = "Proportion",
+       x = "Education Level" )
+
+  
