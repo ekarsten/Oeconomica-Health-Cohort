@@ -18,11 +18,9 @@ slim_df <-
   df %>%
   select(YEAR, SERIAL, STRATA, PSU, NHISHID, HHX, FMX, PX, PERWEIGHT, 
          SAMPWEIGHT, FWEIGHT, ASTATFLG, CSTATFLG, PERNUM, AGE, SEX, MARSTAT,
-         # labor force variables
+         # labor force / household variables
          RELATE, FAMSTRUC1F, PARENTHERE, EDUC, EMPSTAT, HOURSWRK, SECONDJOB,
          HINOAGER, HINOFAMR)
-
-# RELATE
 
 relate_codebook <-
   tibble(RELATE = c(10, 20, 21, 22, 30, 40, 41, 43, 44, 50, 60, 70, 71, 72, 73,
@@ -68,51 +66,49 @@ empstat_codebook <-
                            "Unknown-not ascertained",
                            "Unknown-don't know"))
 
+secondjob_codebook <-
+  tibble(SECONDJOB = c(0, 1, 2, 7, 8, 9),
+         secondjob_clean = c("NIU", "No, don't have more than 1 job",
+                             "Yes, have more than 1 job", "Unknown-refused",
+                             "Unknown-not ascertained", "Unknown-don't know"))
+
+hinoager_codebook <-
+  tibble(HINOAGER = c(0, 1, 2, 9),
+         hinoager_clean = c("NIU", "No","Yes", "Unknown"))
+
+
+hinofamr_codebook <-
+  tibble(HINOFAMR = c(0, 1, 2, 7, 8, 9),
+         hinofamr_clean = c("NIU", "No","Yes", "Unknown - refused", 
+                            "Unknown - not ascertained", 
+                            "Unknown - don't know"))
+parenthere_codebook <-
+  tibble(PARENTHERE = c(0, 10, 11, 12, 20, 30, 98, 99),
+         parenthere_clean = c("NIU", "One parent", "Mother, no father",
+                              "Father, no mother", "Mother and father",
+                              "Neither mother nor father",
+                              "Unknown-not ascertained", 
+                              "Unknown-don't know"))
+famstruc1f_codebook <-
+  tibble(FAMSTRUC1F = c(11, 12, 21, 22, 23, 31, 32, 33, 41, 42, 43, 44, 45, 99),
+         famstruc1f_clean = c("Living alone", "Living with roommate",
+                              "Married couple", "Unmarried couple", 
+                              "All other adult only families",
+                              "Mother and biological or nonbiological children only",
+                              "Father and biological or nonbiological children only",
+                              "All other single-adult and children families",
+                              "Married or unmarried parents with biological/adoptive children only",
+                              "Parent (biological or adoptive), step parent, and child(ren) only",
+                              "Parent (biological or adoptive), cohabiting partner, and child(ren) only",
+                              "At least 1 (biological or adoptive) parent and 1+ child(ren), and other related adults", 
+                              "Other related and/or unrelated adults, 1+ child(ren), no biological or adoptive parent(s)", 
+                              "Unknown"))
+
 df_clean <-
   df %>%
   left_join(relate_codebook, by = "RELATE") %>%
-  left_join(empstat_codebook, by = "EMPSTAT")
-
-
-# Now you try recoding education in a sensible way
-
-
-educ_codebook <-
-  tibble(EDUC = c(00,01,02,03.,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,
-                  19,20,21,22,97,98,99),
-         educ_clean = c("NIU", "Never attended/kindergarten only",
-                        "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5",
-                        "Grade 6", "Grade 7", "Grade 8", "Grade 9",
-                        "Grade 10", "Grade 11", "12th grade, no diploma",
-                        "High school graduate",
-                        "GED or equivalent", "Some college, no degree",
-                        "AA degree: technical/vocational/occupational",
-                        "AA degree: academic program",
-                        "Bachelor's degree (BA,AB,BS,BBA",
-                        "Master's degree (MA,MS,Med,MBA)", 
-                        "Professional (MD,DDS,DVM,JD", 
-                        "Doctoral degree (PhD,EdD)", "Unknown--refused",
-                        "Unknown--not ascertained", "Unknown--don't know"))
-
-
-df_clean <-
-  df %>%
-  left_join(educ_codebook, by = "EDUC")
-
-health_codebook <-
-  tibble(HEALTH = c(1,2,3,4,5,7,8,9),
-         health_clean = c("Excellent","Very Good", "Good", "Fair", "Poor", 
-                          "Unknown-refused", "Unknown-not ascertained", 
-                          "Unknown-don't know"))
-
-df_clean <-
-  df %>%
-  left_join(health_codebook, by = "HEALTH")
-
-
-
-
-
-
-
-
+  left_join(empstat_codebook, by = "EMPSTAT") %>%
+  left_join(hinoager_codebook, by = "HINOAGER") %>%
+  left_join(hinofamr_codebook, by = "HINOFAMR") %>%
+  left_join(famstruc1f_codebook, by = "FAMSTRUC1F") %>%
+  left_join(secondjob_codebook, by = "SECONDJOB")
