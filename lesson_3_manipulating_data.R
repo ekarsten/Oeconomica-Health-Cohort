@@ -30,7 +30,7 @@ library(tidyr)
 library(stringr)
 
 # This is the step where I actually import the data
-df <- read.csv(file.path(ddir, "nhis_00001.csv.gz"))
+df <- read.csv(file.path(ddir, "nhis_00001.csv"))
 
 
 #----------------------------------
@@ -92,7 +92,7 @@ sex_codebook <-
 # Then merge in the new codings into the dataset:
 
 df_clean <-
-  df %>%
+  slim_df %>%
   left_join(sex_codebook, by = "SEX")
 
 # Now you try recoding education in a sensible way
