@@ -13,9 +13,11 @@ df$VACFLU12M
 
 vaccination_codebook <-
   tibble(VACFLU12M = c(0,1,2,3,7,8,9),
-         vaccination_clean = c("NIU","No", "Yes", "Reported both shot and spray", "Refused", "Not Ascertained", "Don't Know"))
+         vaccination_clean = c(NA,"No", rep("Yes", 2), rep(NA, 3)))
 
 df_clean <-
   df %>%
-  left_join(vaccination_codebook, by = "VACFLU12M")
+  left_join(vaccination_codebook, by = "VACFLU12M") %>% 
+  select(-VACFLU12M)
+  
 df_clean
