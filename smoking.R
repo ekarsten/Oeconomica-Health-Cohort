@@ -37,7 +37,7 @@ df <- read.csv(file.path(ddir, "health_cohort_data.csv"))
 # Recoding data
 #--------------------------------
 
-# Sometimes we want nicer variable labels. This is my prefered method of recoding
+# Smoking Status variable
 
 # first create a sort of codebook table by looking up the codebook online
 
@@ -45,33 +45,36 @@ smokestatus_codebook <-
   tibble(SMOKESTATUS2 = c(0,10,11,12,13,20,30,40,90),
          smokestatus_clean = c(NA, rep("Smoker", 5),"Non-Smoker", "Smoker", NA))
 
-SMOKESTATUS2		Cigarette smoking recode 2: Current detailed/former/never
-00		NIU
-10		Current smoker
-11		Current every day smoker
-12		Current some day smoker
-13		Current smoker, unknown how often smokes
-20		Former smoker
-30		Never smoked
-40		Has smoked, current smoking status unknown
-90		Unknown if ever smoked
-
 # Then merge in the new codings into the dataset:
 
-df_clean <-
+df <-
   df %>%
   left_join(smokestatus_codebook, by = "SMOKESTATUS2")
 
-# Now you try recoding education in a sensible way
+# Tried to quit smoking variable
 
+# first create a sort of codebook table by looking up the codebook online
 
+smokequit_codebook <-
+  tibble(CSQTRYYR = c(0,1,2,7,8,9),
+         smokequit_clean = c(NA, "No", "Yes", NA, NA, NA))
 
+# Then merge in the new codings into the dataset:
 
+df <-
+  df %>%
+  left_join(smokequit_codebook, by = "CSQTRYYR")
 
+# Time since quit smoking
 
+# first create a sort of codebook table by looking up the codebook online
 
+timequit_codebook <-
+  tibble(QUITYRS = c(0:99),
+         timequit_clean = c(0:95, rep(NA, 4)))
 
+# Then merge in the new codings into the dataset:
 
-
-
-
+df <-
+  df %>%
+  left_join(timequit_codebook, by = "QUITYRS")
