@@ -33,114 +33,63 @@ library(stringr)
 df <- read.csv(file.path(ddir, "health_cohort_data.csv"))
 
 
-#----------------------------------
-# making new variables using mutate
-#----------------------------------
-
-# our dataframe, df, has a ton of different variables, the following code just
-# selects a few variables of interest to look at: Age, Sex, Education, and Health
-# the code below uses something called piping %>% which puts the output of the
-# last line into the input of the next:
+#making a slim data file
 
 slim_df <-
   df %>%
-  select(AGE, SEX, EDUC, HEALTH, HEIGHT, WEIGHT)
+  select(YEAR, SERIAL, STRATA, PSU, NHISHID, HHWEIGHT, 
+         NHISPID, HHX, FMX, PX, PERWEIGHT, FWEIGHT, ASTATFLG, CSTATFLG, 
+         PERNUM, AGE, SEX, MARSTAT, RELATE, FAMSTRUC1F, PARENTHERE, RACEA, 
+         HISPETH, EDUC, EMPSTAT, HOURSWRK, SECONDJOB, POORYN, INCFAM97ON2, 
+         WELFMO, HPVHEAR, HPVACHAD, BCPILNOW)
 
-# Now we want to create a new variable for health divided by age, because why not
-# and another for weight divided by height (this isn't technically BMI, but it's
-# a scale factor off, so it doesnt' matter)
+#coding sex and merging it with df clean
 
-df_new_vars <-
+sex_codebook <-
+  tibble(SEX = c(1,2),
+         sex_clean = c("Male","Female"))
+
+df_clean <-
   slim_df %>%
-  mutate(BMI = WEIGHT/HEIGHT,
-         discounted_health = HEALTH/AGE)
+  left_join(sex_codebook, by = "SEX")
 
-# Now go find some interesting variables in the dataset and make some new variables
-# using mutate
+#coding educ and merging it with df clean
 
+educ_codebook <-
+  tibble(EDUC = c(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,97,98),
+         educ_clean = c("NIU","KOnly","1stGrade","2ndGrade","3rdGrade","4thGrade","5thGrade","6thGrade","7thGrade","8thGrade","9thGrade","10thGrade","11thGrade","12NoGrad","HSDip","GED","SomeCollege","AATech","AAAca","BABS","MAMS","MDJD","PhDEdD","Ref","Unknown"))
 
-#--------------------------------
-# Making evan more exciting tables using summarise
-#--------------------------------
+df_clean <-
+  df %>%
+  left_join(educ_codebook, by = "EDUC")
 
-# Sometimes we want to change the way we are looking at information about data,
-# So what we do is we break the data into groups and summarize by group.
+#coding birth control use and merging it with df clean
 
-# Here I will make a table that counts the number of people who rate their health
-# in each category
+bcpill_codebook <-
+  tibble(BCPILNOW = c(0,1,2,7,8,9),
+         bcpill_clean = c("NIU","No","Yes","Refused","Not Ascertained","Don't Know"))
 
-slim_df %>%
-  group_by(HEALTH) %>%
-  summarise(number = n())
+df_clean <-
+  df %>%
+  left_join(bcpill_codebook, by = "BCPILNOW")
 
+#coding hpvhad
 
-# Now I will do something a little more fun: doing the same counts broken down by gender
+hadhpva_codebook <-
+  tibble(HPVACHAD = c(00,10,11,20,97,98,99),
+         hadhpva_clean = c("NIU","No","Doc Refused","Yes","Refused","Not Ascertained","Don't Know"))
 
-slim_df %>%
-  group_by(SEX, HEALTH) %>%
-  summarise(number = n())
+df_clean <-
+  df %>%
+  left_join(hadhpva_codebook, by = "HPVACHAD")
 
-# That table was a little hard to read, so let's spread it out into a wide table:
+#coding heard of hpv
 
-slim_df %>%
-  group_by(SEX, HEALTH) %>%
-  summarise(number = n()) %>%
-  spread(key = SEX, value = number)
+heardhpva_codebook <-
+  tibble(HPVHEAR = c(0,1,2,7,8,9),
+         heardhpva_clean = c("NIU","No","Yes","Refused","Not Ascertained","Don't Know"))
 
-# Now I will group by age and summarize the mean rating of health for each age
-
-slim_df %>%
-  group_by(AGE) %>%
-  summarise(AVG_HEALTH = mean(HEALTH))
-
-# For a sneak peek into next week's tutorial, let's make a figure out of this!
-
-slim_df %>%
-  group_by(AGE) %>%
-  summarise(AVG_HEALTH = mean(HEALTH)) %>%
-  ggplot(aes(x = AGE, y = AVG_HEALTH)) +
-  geom_point()
-
-# That is somewhat surprising. Let's see what the raw data looks like:
-
-slim_df %>%
-  ggplot(aes(x = AGE, y = HEALTH)) +
-  geom_jitter() +
-  geom_smooth()
-
-
-# Please use the space below to write some code to make some cool summary tables
-
-slim_df %>%
-  group_by (WEIGHT) %>%
-  summarise(number = n())
-
-slim_df %>%
-  group_by (EDUC, WEIGHT) %>%
-  summarise(number = n()) %>%
-  spread(key = EDUC, value = number)
-
-
-slim_df %>%
-  filter(EDUC<30) %>%
-  group_by(EDUC) %>%
-  summarise(AVG_WEIGHT = mean(WEIGHT)) %>%
-  ggplot(aes(x = EDUC, y = AVG_WEIGHT)) +
-  geom_point()
-
-slim_df_new <-
-  slim_df %>%
-  select(AGE, EDUC)
-
-slim_df_new %>%
-  group_by(AGE) %>%
-  ggplot(aes(x = AGE, y = EDUC)) +
-  geom_point()
-
-
-
-
-
-
-
+df_clean <-
+  df %>%
+  left_join(heardhpva_codebook, by = "HPVHEAR")
 
