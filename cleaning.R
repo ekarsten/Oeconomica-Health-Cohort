@@ -187,4 +187,8 @@ df_clean <-
   left_join(hinoager_codebook, by = "HINOAGER") %>%
   left_join(hinofamr_codebook, by = "HINOFAMR") %>%
   left_join(famstruc1f_codebook, by = "FAMSTRUC1F") %>%
-  left_join(secondjob_codebook, by = "SECONDJOB")
+  left_join(secondjob_codebook, by = "SECONDJOB") %>%
+  left_join(delaycost_codebook, by = "DELAYCOST") 
+
+
+  
