@@ -159,7 +159,11 @@ famstruc1f_codebook <-
                               "Other related and/or unrelated adults, 1+ child(ren), no biological or adoptive parent(s)", 
                               "Unknown"))
 
+# Gina
 
+delaycost_codebook <-
+  tibble(DELAYCOST = c(1,2,0,7,8,9 ),
+         delaycost_clean = c("No","Yes",NA,NA,NA,NA))
 
 #------------------------------
 # Combining
