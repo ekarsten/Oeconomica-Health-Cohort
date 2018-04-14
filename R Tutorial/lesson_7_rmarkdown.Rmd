@@ -36,11 +36,7 @@ source(file.path(root, "data.R"))
 # For example, to install dplyr, run "install.packages("dplyr")"
 library(dplyr)
 library(ggplot2)
-library(lubridate)
 library(knitr)
-library(purrr)
-library(tidyr)
-library(stringr)
 library(stargazer)
 
 # This is the step where I actually import the data
@@ -93,6 +89,8 @@ age_health_gender <-
   spread(key = sex_clean, value = avg)
 
 kable(age_health_gender, caption = "Average health as respondents age by gender")
+
+age_health_gender
 
 ```
 
