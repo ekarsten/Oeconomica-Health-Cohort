@@ -164,6 +164,7 @@ hinoager_codebook <-
 hinofamr_codebook <-
   tibble(HINOFAMR = c(0, 1, 2, 7:9),
          hinofamr = c(NA, "No","Yes", rep(NA,3)))
+
 parenthere_codebook <-
   tibble(PARENTHERE = c(0, 10, 11, 12, 20, 30, 98, 99),
          parenthere = c(NA, "One parent", "Mother, no father",
@@ -184,6 +185,9 @@ famstruc1f_codebook <-
                               "At least 1 (biological or adoptive) parent and 1+ child(ren), and other related adults", 
                               "Other related and/or unrelated adults, 1+ child(ren), no biological or adoptive parent(s)", 
                               NA))
+hourswrk_codebook <-
+  tibble(HOURSWRK = c(0:95, 97:99),
+         hourswrk = c(0:95, rep(NA,3)))
 
 # Gina
 
@@ -225,5 +229,5 @@ df_clean <-
          -HPVHEAR, -CHECKUP, -DENTINT, -DOCVIS2W, -SAWGEN, -SMOKESTATUS2, -CSQTRYYR, -QUITYRS, 
          -VACFLU12M, -RELATE, -HINOAGER, -HINOFAMR, -FAMSTRUC1F, -SECONDJOB, -HOURSWRK, -DELAYCOST)
 
-
+save(df, file = file.path(ddir, "clean_health_cohort_data.Rda"))
 
