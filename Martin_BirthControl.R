@@ -30,7 +30,8 @@ library(tidyr)
 library(stringr)
 
 # This is the step where I actually import the data
-df <- read.csv(file.path(ddir, "health_cohort_data.csv"))
+
+load(file.path(ddir, "clean_health_cohort_data.rda"))
 
 
 #making a slim data file
@@ -39,57 +40,29 @@ slim_df <-
   df %>%
   select(YEAR, SERIAL, STRATA, PSU, NHISHID, HHWEIGHT, 
          NHISPID, HHX, FMX, PX, PERWEIGHT, FWEIGHT, ASTATFLG, CSTATFLG, 
-         PERNUM, AGE, SEX, MARSTAT, RELATE, FAMSTRUC1F, PARENTHERE, RACEA, 
-         HISPETH, EDUC, EMPSTAT, HOURSWRK, SECONDJOB, POORYN, INCFAM97ON2, 
-         WELFMO, HPVHEAR, HPVACHAD, BCPILNOW)
+         PERNUM, age, sex, marstat, race, 
+         hispanic, educ, empstat, hourswrk, secondjob, POORYN, family_income, 
+         WELFMO, heardhpva, hadhpva, bcpill)
 
-#coding sex and merging it with df clean
-
-sex_codebook <-
-  tibble(SEX = c(1,2),
-         sex_clean = c("Male","Female"))
-
-df_clean <-
+f1826_df <-
   slim_df %>%
-  left_join(sex_codebook, by = "SEX")
+  filter(age >= 18, age <= 26, sex == "Female")
 
-#coding educ and merging it with df clean
+countbc_df <-
+  f1826_df %>%
+  filter(age >= 18, age <= 26, sex == "Female") %>%
+  group_by(YEAR) %>%
+  summarize(N_Yes = sum(bcpill == "Yes"),
+            N_No = sum(bcpill == "No"),
+            N_Total = n())
 
-educ_codebook <-
-  tibble(EDUC = c(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,97,98),
-         educ_clean = c("NIU","KOnly","1stGrade","2ndGrade","3rdGrade","4thGrade","5thGrade","6thGrade","7thGrade","8thGrade","9thGrade","10thGrade","11thGrade","12NoGrad","HSDip","GED","SomeCollege","AATech","AAAca","BABS","MAMS","MDJD","PhDEdD","Ref","Unknown"))
+countbc_df %>%
+  ggplot(aes(x=YEAR, y=N_Yes)) +
+  geom_point()
 
-df_clean <-
-  df %>%
-  left_join(educ_codebook, by = "EDUC")
+  
 
-#coding birth control use and merging it with df clean
 
-bcpill_codebook <-
-  tibble(BCPILNOW = c(0,1,2,7,8,9),
-         bcpill_clean = c("NIU","No","Yes","Refused","Not Ascertained","Don't Know"))
+  
 
-df_clean <-
-  df %>%
-  left_join(bcpill_codebook, by = "BCPILNOW")
-
-#coding hpvhad
-
-hadhpva_codebook <-
-  tibble(HPVACHAD = c(00,10,11,20,97,98,99),
-         hadhpva_clean = c("NIU","No","Doc Refused","Yes","Refused","Not Ascertained","Don't Know"))
-
-df_clean <-
-  df %>%
-  left_join(hadhpva_codebook, by = "HPVACHAD")
-
-#coding heard of hpv
-
-heardhpva_codebook <-
-  tibble(HPVHEAR = c(0,1,2,7,8,9),
-         heardhpva_clean = c("NIU","No","Yes","Refused","Not Ascertained","Don't Know"))
-
-df_clean <-
-  df %>%
-  left_join(heardhpva_codebook, by = "HPVHEAR")
 
