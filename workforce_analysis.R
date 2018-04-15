@@ -16,3 +16,12 @@ library(stringr)
 library(measurements)
 
 load(file.path(ddir, "clean_health_cohort_data.rda"))
+
+
+u26_df <-
+  df %>%
+  filter(age <= 26, age >= 18, hourswrk != NA)
+  
+u26_df %>%
+  ggplot(aes(x = YEAR, y = hourswrk)) +
+  geom_point() 
