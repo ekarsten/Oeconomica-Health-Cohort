@@ -51,16 +51,21 @@ f1826_df <-
 countbc_df <-
   f1826_df %>%
   filter(age >= 18, age <= 26, sex == "Female") %>%
-  group_by(YEAR) %>%
+  group_by(YEAR, race, hispanic, family_income) %>%
   summarize(N_Yes = sum(bcpill == "Yes"),
             N_No = sum(bcpill == "No"),
-            N_Total = n())
+            N_Total = n()) %>%
+  mutate(prop_yes = N_Yes/(N_No+N_Yes))
 
 countbc_df %>%
-  ggplot(aes(x=YEAR, y=N_Yes)) +
-  geom_point()
+  ggplot(aes(x=YEAR, y=prop_yes, color = race)) +
+  geom_point() +
+  facet_wrap(~ hispanic)
 
   
+countbc_df %>%
+  ggplot(aes(x=YEAR, y=prop_yes, color = family_income)) +
+  geom_point()
 
 
   
