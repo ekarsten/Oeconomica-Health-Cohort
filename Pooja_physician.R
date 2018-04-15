@@ -66,3 +66,6 @@ physician_df <-
   left_join(DENTINT_codebook, by = "DENTINT") %>%
   left_join(DOCVIS2W_codebook, by = "DOCVIS2W") %>%
   left_join(SAWGEN_codebook, by = "SAWGEN") 
+
+
+
