@@ -31,8 +31,5 @@ g1<-countER_df %>%
   geom_point()
 g1
 
-g2<-countER_df %>%
-  ggplot(aes(x=YEAR, y=N_yes)) +
-  geom_point()
-g2
 
+#look at relationship for people with and without health insurance
