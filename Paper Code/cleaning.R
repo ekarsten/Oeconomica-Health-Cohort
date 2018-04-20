@@ -62,6 +62,10 @@ income_codebook <-
   tibble(INCFAM97ON2 = c(10, 20, 30:32, 96:99),
          family_income = c("Under 35K", "35K - 75K", rep("Over 75K", 3), rep(NA, 4)))
 
+insurance_codebook <-
+  tibble(HINOTCOVE = c(0, 1, 2, 7:9),
+         any_insurance = c(NA, "No", "Yes", rep(NA, 3)))
+
 # Olivia
 
 bcpill_codebook <-
@@ -225,9 +229,10 @@ df <-
   left_join(secondjob_codebook, by = "SECONDJOB") %>%
   left_join(hourswrk_codebook, by = "HOURSWRK") %>%
   left_join(delaycost_codebook, by = "DELAYCOST") %>%
+  left_join(insurance_codebook, by = "HINOTCOVE") %>%
   select(-SEX, -AGE, -EDUC, -MARSTAT, -RACEA, -HISPETH, -EMPSTAT, -INCFAM97ON2, -BCPILNOW, -HPVACHAD,
          -HPVHEAR, -CHECKUP, -DENTINT, -DOCVIS2W, -SAWGEN, -SMOKESTATUS2, -CSQTRYYR, -QUITYRS, 
-         -VACFLU12M, -RELATE, -HINOAGER, -HINOFAMR, -FAMSTRUC1F, -SECONDJOB, -HOURSWRK, -DELAYCOST)
+         -VACFLU12M, -RELATE, -HINOAGER, -HINOFAMR, -FAMSTRUC1F, -SECONDJOB, -HOURSWRK, -DELAYCOST, -HINOTCOVE)
 
 save(df, file = file.path(ddir, "clean_health_cohort_data.Rda"))
 
