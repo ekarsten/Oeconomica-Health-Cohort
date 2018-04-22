@@ -64,7 +64,7 @@ income_codebook <-
 
 insurance_codebook <-
   tibble(HINOTCOVE = c(0, 1, 2, 7:9),
-         any_insurance = c(NA, "No", "Yes", rep(NA, 3)))
+         any_insurance = c(NA, "Yes", "No", rep(NA, 3)))
 
 # Olivia
 
