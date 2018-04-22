@@ -98,8 +98,6 @@ sex_codebook <-
   tibble(SEX = c(1,2),
          sex_clean = c("Male","Female"))
 
-# Then merge in the new codings into the dataset:
-
 df_clean <-
   df %>%
   left_join(sex_codebook, by = "SEX")

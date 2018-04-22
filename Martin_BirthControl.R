@@ -48,6 +48,8 @@ f1826_df <-
   slim_df %>%
   filter(age >= 18, age <= 26, sex == "Female")
 
+#graphing based on race
+
 countbc_df <-
   f1826_df %>%
   filter(age >= 18, age <= 26, sex == "Female") %>%
@@ -63,11 +65,24 @@ countbc_df %>%
   facet_wrap(~ hispanic)
 
   
+#separated by income
+
+f1826_df <-
+  slim_df %>%
+  filter(age >= 18, age <= 26, sex == "Female")
+
+countbc_df <-
+  f1826_df %>%
+  filter(age >= 18, age <= 26, sex == "Female") %>%
+  group_by(YEAR, family_income) %>%
+  summarize(N_Yes = sum(bcpill == "Yes"),
+            N_No = sum(bcpill == "No"),
+            N_Total = n()) %>%
+  mutate(prop_yes = N_Yes/(N_No+N_Yes))
+  
 countbc_df %>%
   ggplot(aes(x=YEAR, y=prop_yes, color = family_income)) +
   geom_point()
 
-
-  
-
+#separated by has insurance
 
