@@ -16,7 +16,7 @@ source(file.path(root, "data.R"))
   
 load(file.path(ddir, "clean_health_cohort_data.rda"))
 
-
+# Proportion of Smokers
 smokestatus_count <-
   df %>%
   group_by(YEAR) %>%
@@ -26,5 +26,50 @@ smokestatus_count <-
   mutate(prop_yes = N_Yes/(N_Yes + N_No))
 
 smokestatus_count %>%
-  ggplot(aes(x=YEAR, y=prop_yes)) +
-  geom_point()
+  ggplot(aes(x=YEAR, y=prop_yes*100)) +
+  geom_point() + geom_smooth(model = lm) + theme_bw() +
+  labs(title = "Proportion of Smokers", x = "Year", y = "% Smokers")
+
+# Proportion of smokers (insurance vs. no insurance)
+smokestatus_count <-
+  df %>%
+  group_by(YEAR, any_insurance) %>%
+  summarize(N_Yes = sum(smokestatus == "Smoker", na.rm = TRUE),
+            N_No = sum(smokestatus == "Non-Smoker", na.rm = TRUE),
+            N_Total = n()) %>% 
+  mutate(prop_yes = N_Yes/(N_Yes + N_No))
+
+smokestatus_count %>%
+  filter(!is.na(any_insurance)) %>%
+  ggplot(aes(x=YEAR, y=prop_yes*100, color = any_insurance)) +
+  geom_point() + geom_smooth(model = lm) + 
+  labs(title = "Proportion of Smokers (insurance vs. no insurance)", x = "Year", y = "% Smokers")
+
+# Tried to quit smoking
+smokequit_count <- 
+  df %>%
+  group_by(YEAR) %>%
+  summarize(N_Yes = sum(smokequit == "Yes", na.rm = TRUE),
+            N_No = sum(smokequit == "No", na.rm = TRUE),
+            N_Total = n()) %>% 
+  mutate(prop_yes = N_Yes/(N_Yes + N_No))
+
+smokequit_count %>%
+  ggplot(aes(x=YEAR, y=prop_yes*100)) +
+  geom_point() + geom_smooth(model = lm) + 
+  labs(title = "Tried to quit smoking 1+ days in the past 12 months", x = "Year", y = "%")
+
+# Tried to quit smoking (insurance vs. no insurance)
+smokequit_count <- 
+  df %>%
+  group_by(YEAR, any_insurance) %>%
+  summarize(N_Yes = sum(smokequit == "Yes", na.rm = TRUE),
+            N_No = sum(smokequit == "No", na.rm = TRUE),
+            N_Total = n()) %>% 
+  mutate(prop_yes = N_Yes/(N_Yes + N_No))
+
+smokequit_count %>%
+  filter(!is.na(any_insurance)) %>%
+  ggplot(aes(x=YEAR, y=prop_yes*100, color = any_insurance)) +
+  geom_point() + geom_smooth(model = lm) + 
+  labs(title = "Tried to quit smoking 1+ days in the past 12 months", x = "Year", y = "%")
