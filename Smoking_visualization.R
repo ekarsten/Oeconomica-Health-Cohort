@@ -28,7 +28,7 @@ smokestatus_count <-
 smokestatus_count %>%
   ggplot(aes(x=YEAR, y=prop_yes*100)) +
   geom_point() + geom_smooth(model = lm) + theme_bw() +
-  labs(title = "Proportion of Smokers", x = "Year", y = "% Smokers")
+  labs(x = "Year", y = "% Smokers")
 
 # Proportion of smokers (insurance vs. no insurance)
 smokestatus_count <-
@@ -42,8 +42,10 @@ smokestatus_count <-
 smokestatus_count %>%
   filter(!is.na(any_insurance)) %>%
   ggplot(aes(x=YEAR, y=prop_yes*100, color = any_insurance)) +
-  geom_point() + geom_smooth(model = lm) + 
-  labs(title = "Proportion of Smokers (insurance vs. no insurance)", x = "Year", y = "% Smokers")
+  geom_point() + geom_smooth(model = lm) +
+  labs(x = "Year", y = "% Smokers") + scale_color_discrete(name = "Any Insurance") +
+  theme(legend.position="bottom")
+
 
 # Tried to quit smoking
 smokequit_count <- 
@@ -57,7 +59,7 @@ smokequit_count <-
 smokequit_count %>%
   ggplot(aes(x=YEAR, y=prop_yes*100)) +
   geom_point() + geom_smooth(model = lm) + 
-  labs(title = "Tried to quit smoking 1+ days in the past 12 months", x = "Year", y = "%")
+  labs(x = "Year", y = "%")
 
 # Tried to quit smoking (insurance vs. no insurance)
 smokequit_count <- 
@@ -72,4 +74,5 @@ smokequit_count %>%
   filter(!is.na(any_insurance)) %>%
   ggplot(aes(x=YEAR, y=prop_yes*100, color = any_insurance)) +
   geom_point() + geom_smooth(model = lm) + 
-  labs(title = "Tried to quit smoking 1+ days in the past 12 months", x = "Year", y = "%")
+  labs(x = "Year", y = "%") + scale_color_discrete(name = "Any Insurance") + 
+  theme(legend.position="bottom")
