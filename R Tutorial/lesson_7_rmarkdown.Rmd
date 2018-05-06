@@ -1,0 +1,153 @@
+---
+title: "R Markdown Tutorial"
+author: "Eric Karsten"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  pdf_document:
+    toc: TRUE
+    fig_height: 4
+    fig_width: 6
+---
+Now let's say that we want to have a nice PDF readout of some of our tables and
+analyses in R. The tool we will use is Rmarkdown. This allows you to generate a
+PDF document with output from R code with very little effort. There are lots of
+options for how you run your code chunks so that they turn out nicely.
+
+# Including or not including code chunks
+
+Our first code chunk brings in our dataset, so it's not useful to include that 
+in the markdown (and you don't see it below in the PDF output).
+```{r importing data, include= F}
+
+# This snippet of code is a little loop that makes my code work on your computer
+root <- getwd()
+while(basename(root) != "Oeconomica-Health-Cohort") {
+  root <- dirname(root)
+}
+
+# This line runs the script in your data.R file so that each person can have
+# their data in a different place because everyone's file structure will be 
+# a little differnt
+source(file.path(root, "data.R"))
+
+
+# These are some fantastic packages that I always load in
+# You will need to run "install.packages()" with the name of each package
+# For example, to install dplyr, run "install.packages("dplyr")"
+library(dplyr)
+library(ggplot2)
+library(knitr)
+library(stargazer)
+
+# This is the step where I actually import the data
+df <- read.csv(file.path(ddir, "nhis_00001.csv.gz"))
+
+
+```
+
+Now the below code ins included in our PDF, but I have opted not to have to see any
+of the warning messages that come with viewing it.
+
+```{r data cleaning, warning=F}
+sex_codebook <-
+  tibble(SEX = c(1,2),
+         sex_clean = c("Male","Female"))
+
+educ_codebook <- 
+  tibble(EDUC = c(0:22, 97:99),
+         educ_clean = c(rep("No Degree", 14),
+                        rep("HS Diploma",2),
+                        rep("Some College", 3),
+                        rep("College Degree", 4),
+                        rep(NA, 3)
+                        )
+         )
+
+slim_df <-
+  df %>%
+  select(AGE, SEX, EDUC, HEALTH, HEIGHT, WEIGHT) %>%
+  sample_frac(.1, replace = F) %>%
+  mutate(BMI = WEIGHT/HEIGHT) %>%
+  left_join(sex_codebook, by = "SEX") %>%
+  left_join(educ_codebook, by = "EDUC")
+```
+
+
+# Including tables
+
+Let's say I now want to tell the story of how men and women get less healthy
+as they get older. The first thing I might want to show would be a table with
+the average health ratings of men and women compared with how old they are. I use
+the kable command to include a nice looking table in the markdown.
+
+```{r including tables}
+
+age_health_gender <-
+  slim_df %>%
+  group_by(AGE, sex_clean) %>%
+  summarise(avg = mean(HEALTH)) %>%
+  spread(key = sex_clean, value = avg)
+
+kable(age_health_gender, caption = "Average health as respondents age by gender")
+
+age_health_gender
+
+```
+
+This table is so long it is useless, so let's represent this information differently.
+
+# Including ggpplots
+
+Now I want to further convince my readers by showing the difference in the distributions
+of our data for health rating by age and gender. To do this I will create a categorical
+age variable.
+
+
+```{r including ggplots}
+
+slim_df %>%
+  group_by(AGE, sex_clean) %>%
+  summarise(avg = mean(HEALTH)) %>%
+  ggplot(aes(x = AGE, y = avg, color = sex_clean)) +
+  geom_point() +
+  geom_smooth() +
+  theme(legend.position = 'bottom') +
+  labs(title = "Average health rating by age and sex",
+       x = "Age of Respondent",
+       color = "Reported sex",
+       y = "Average Health Rating (1 is good)")
+
+slim_df %>%
+  mutate(age = case_when(AGE < 20 ~ "20 and below",
+                         AGE < 40 ~ "20 to 40",
+                         AGE < 60 ~ "40 to 60",
+                         AGE < 90 ~ "60 to 90")) %>%
+  ggplot(aes(x = HEALTH, fill = sex_clean)) +
+  geom_bar(position = 'fill')+
+  facet_grid(. ~ age) +
+  theme(legend.position = 'bottom') +
+  labs(title = "Distributions of health rating by age and sex",
+       x = "Health Rating",
+       fill = "Reported sex",
+       y = "Gender ratio for reporting this rating")
+
+
+```
+
+# Including regression output
+
+Now the below code chunk has a few options. The `results='asis'` option is there
+to make the output of stargazer render nicely. The `echo = F` prevents the source
+code form being inlcuded, and the `warning = F` prevents any warnings form being included
+in the PDF.
+
+```{r including models, results='asis', echo= F, warning= F}
+
+
+model_1 <- lm(HEALTH ~ sex_clean + AGE, data = slim_df)
+
+model_2 <- lm(HEALTH ~ sex_clean * AGE, data = slim_df)
+
+stargazer(model_1, model_2)
+
+```
