@@ -42,7 +42,7 @@ slim_df <-
          NHISPID, HHX, FMX, PX, PERWEIGHT, FWEIGHT, ASTATFLG, CSTATFLG, 
          PERNUM, age, sex, marstat, race, 
          hispanic, educ, empstat, hourswrk, secondjob, POORYN, family_income, 
-         WELFMO, heardhpva, hadhpva, bcpill)
+         WELFMO, any_insurance, heardhpva, hadhpva, bcpill)
 
 f1826_df <-
   slim_df %>%
@@ -53,7 +53,7 @@ f1826_df <-
 countbc_df <-
   f1826_df %>%
   filter(age >= 18, age <= 26, sex == "Female") %>%
-  group_by(YEAR, race, hispanic, family_income) %>%
+  group_by(YEAR, race, hispanic) %>%
   summarize(N_Yes = sum(bcpill == "Yes"),
             N_No = sum(bcpill == "No"),
             N_Total = n()) %>%
@@ -62,6 +62,7 @@ countbc_df <-
 countbc_df %>%
   ggplot(aes(x=YEAR, y=prop_yes, color = race)) +
   geom_point() +
+  labs(x="Year", y="Proportion Using Birth Control") +
   facet_wrap(~ hispanic)
 
   
@@ -77,12 +78,70 @@ countbc_df <-
   group_by(YEAR, family_income) %>%
   summarize(N_Yes = sum(bcpill == "Yes"),
             N_No = sum(bcpill == "No"),
-            N_Total = n()) %>%
+            N_Total = n(),
+            na.rm = TRUE) %>%
   mutate(prop_yes = N_Yes/(N_No+N_Yes))
   
 countbc_df %>%
   ggplot(aes(x=YEAR, y=prop_yes, color = family_income)) +
+  labs(x="Year", y="Proportion Using Birth Control") +
   geom_point()
 
-#separated by has insurance
+#separated by employment status
 
+f1826_df <-
+  slim_df %>%
+  filter(age >= 18, age <= 26, sex == "Female")
+
+countbc_df <-
+  f1826_df %>%
+  filter(age >= 18, age <= 26, sex == "Female") %>%
+  group_by(YEAR, empstat) %>%
+  summarize(N_Yes = sum(bcpill == "Yes"),
+            N_No = sum(bcpill == "No"),
+            N_Total = n()) %>%
+  mutate(prop_yes = N_Yes/(N_No+N_Yes))
+
+countbc_df %>%
+  ggplot(aes(x=YEAR, y=prop_yes, color = empstat)) +
+  labs(x="Year",y="Proportion Using Birth Control") +
+  geom_point()
+
+#separated by having insurance
+
+f1826_df <-
+  slim_df %>%
+  filter(age >= 18, age <= 26, sex == "Female")
+
+countbc_df <-
+  f1826_df %>%
+  filter(age >= 18, age <= 26, sex == "Female") %>%
+  group_by(YEAR, any_insurance) %>%
+  summarize(N_YesBC = sum(bcpill == "Yes"),
+            N_NoBC = sum(bcpill == "No"),
+            N_TotalBC = n()) %>%
+  summarize(N_YesIN = sum(any_insurance == "Yes"),
+            N_NoIN = sum(any_insurance == "No"),
+            N_TotalIN = n()) %>%
+  mutate(prop_yesBC = N_YesBC/(N_No+N_YesBC))
+
+countbc_df %>%
+  ggplot(aes(x=YEAR, y=prop_yes, color = any_insurance)) +
+  geom_point()
+
+# number using bc
+f1826_df <-
+  slim_df %>%
+  filter(age >= 18, age <= 26, sex == "Female")
+
+countbc_df <-
+  f1826_df %>%
+  filter(age >= 18, age <= 26, sex == "Female") %>%
+  group_by(YEAR) %>%
+  summarize(num_bcpill = sum(bcpill=="Yes"))
+
+
+countbc_df %>%
+  ggplot(aes(x=YEAR, y=num_bcpill)) +
+  labs(x="Year",y="Number of Women on Birth Control") +
+  geom_point()

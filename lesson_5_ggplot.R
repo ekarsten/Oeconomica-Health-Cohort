@@ -105,6 +105,7 @@ slim_df %>%
        fill = "Health Level")
 
 # Now you make some awesome faceted plots below!!
+<<<<<<< HEAD
 
 slim_df %>%
   filter(WEIGHT != 0, WEIGHT < 900) %>%
@@ -163,3 +164,5 @@ slim_df %>%
        x = "Education Level" )
 
   
+=======
+>>>>>>> master
