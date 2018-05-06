@@ -102,7 +102,7 @@ df <-
 m1 <- felm(numeric_insurance ~ zeroed_year*numeric_aca | race + age + sex + educ + hispanic,
            data = df, weights = df$PERWEIGHT)
 
-stargazer(m1, header = F, type = "text")
+stargazer(m1, header = F)
 
 # OK, now let's predict vaccination in this same framework
 
@@ -115,3 +115,11 @@ m3 <- felm(numeric_vaccination ~ zeroed_year*numeric_aca*numeric_insurance | rac
            data = df, weights = df$PERWEIGHT)
 
 stargazer(m2,m3, header = F, type = "text")
+
+# Now let's do a version that's not looking at year trends but merely comparing pre and post vaccination by each group as a differences in differences:
+
+m4 <- felm(numeric_vaccination ~ numeric_aca*numeric_insurance | race + age + sex + educ + hispanic,
+           data = df, weights = df$PERWEIGHT)
+
+stargazer(m4, header = F, type = "text")
+
