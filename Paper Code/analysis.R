@@ -15,6 +15,8 @@ source(file.path(root, "data.R"))
 
 library(dplyr)
 library(ggplot2)
+library(lfe)
+library(stargazer)
 
 load(file.path(ddir, "clean_health_cohort_data.Rda"))
 
@@ -38,6 +40,18 @@ df %>%
   geom_point() +
   theme_bw() +
   facet_wrap(~race) +
+  labs(x = "Year",
+       y = "Proportion Vaccinated")
+
+
+df %>%
+  filter(!is.na(any_insurance)) %>%
+  group_by(YEAR, sex, any_insurance) %>%
+  summarise(prop_vaccinated = sum(vaccination == "Yes", na.rm = T )/n()  ) %>%
+  ggplot(aes(x = as.character(YEAR), y = prop_vaccinated, color = any_insurance)) +
+  geom_point() +
+  theme_bw() +
+  facet_wrap(~sex) +
   labs(x = "Year",
        y = "Proportion Vaccinated")
 
@@ -67,6 +81,45 @@ df %>%
   labs(x = "Year",
        y = "Proportion with Insurance")
 
+#-------------------------------------
+# This is a super simple regression discontinuity framework fo rinsurance over time
+#-------------------------------------
 
+# First we have to create a dummy variable for before or after introduction of ACA:
 
+df <-
+  df %>%
+  mutate(aca = YEAR >= 2011,
+         zeroed_year = as.numeric(YEAR) - 2011,
+         numeric_insurance = ifelse(any_insurance == "Yes", 1, 0),
+         numeric_vaccination = ifelse(vaccination == "Yes", 1, 0),
+         numeric_aca = ifelse(aca == T, 1, 0))
+
+# Now in the model below, we are trying to explain the time trends in insurance with
+# A discontinuity at the affordable care act (so theere will be a pretrend and a postrend)
+# We will also be controling for various other factors: race, hispanic ethnicity, age, sex, education
+
+m1 <- felm(numeric_insurance ~ zeroed_year*numeric_aca | race + age + sex + educ + hispanic,
+           data = df, weights = df$PERWEIGHT)
+
+stargazer(m1, header = F)
+
+# OK, now let's predict vaccination in this same framework
+
+m2 <- felm(numeric_vaccination ~ zeroed_year*numeric_aca | race + age + sex + educ + hispanic,
+           data = df, weights = df$PERWEIGHT)
+
+# Then we will throw insurance into the framework and see how that changes 
+
+m3 <- felm(numeric_vaccination ~ zeroed_year*numeric_aca*numeric_insurance | race + age + sex + educ + hispanic,
+           data = df, weights = df$PERWEIGHT)
+
+stargazer(m2,m3, header = F, type = "text")
+
+# Now let's do a version that's not looking at year trends but merely comparing pre and post vaccination by each group as a differences in differences:
+
+m4 <- felm(numeric_vaccination ~ numeric_aca*numeric_insurance | race + age + sex + educ + hispanic,
+           data = df, weights = df$PERWEIGHT)
+
+stargazer(m4, header = F, type = "text")
 
