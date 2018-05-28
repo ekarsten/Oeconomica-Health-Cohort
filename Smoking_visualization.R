@@ -28,7 +28,7 @@ smokestatus_count <-
 smokestatus_count %>%
   ggplot(aes(x=YEAR, y=prop_yes*100)) +
   geom_point() + geom_smooth(model = lm) + theme_bw() +
-  labs(x = "Year", y = "% Smokers")
+  labs(x = "Year", y = "% Smokers") + geom_vline(xintercept = 2010, linetype="dotted", color = "blue")
 
 # Proportion of smokers (insurance vs. no insurance)
 smokestatus_count <-
@@ -44,7 +44,7 @@ smokestatus_count %>%
   ggplot(aes(x=YEAR, y=prop_yes*100, color = any_insurance)) +
   geom_point() + geom_smooth(model = lm) +
   labs(x = "Year", y = "% Smokers") + scale_color_discrete(name = "Any Insurance") +
-  theme(legend.position="bottom")
+  theme(legend.position="bottom") + geom_vline(xintercept = 2010, linetype="dotted", color = "blue")
 
 
 # Tried to quit smoking
@@ -59,7 +59,7 @@ smokequit_count <-
 smokequit_count %>%
   ggplot(aes(x=YEAR, y=prop_yes*100)) +
   geom_point() + geom_smooth(model = lm) + 
-  labs(x = "Year", y = "%")
+  labs(x = "Year", y = "%") + geom_vline(xintercept = 2010, linetype="dotted", color = "blue")
 
 # Tried to quit smoking (insurance vs. no insurance)
 smokequit_count <- 
@@ -75,4 +75,4 @@ smokequit_count %>%
   ggplot(aes(x=YEAR, y=prop_yes*100, color = any_insurance)) +
   geom_point() + geom_smooth(model = lm) + 
   labs(x = "Year", y = "%") + scale_color_discrete(name = "Any Insurance") + 
-  theme(legend.position="bottom")
+  theme(legend.position="bottom") + geom_vline(xintercept = 2010, linetype="dotted", color = "blue")

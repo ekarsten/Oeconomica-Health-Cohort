@@ -130,7 +130,7 @@ df <-
 m1 <- felm(numeric_insurance ~ zeroed_year*numeric_aca | race + age + sex + educ + hispanic,
            data = df, weights = df$PERWEIGHT)
 
-stargazer(m1, header = F, type = "text")
+stargazer(m1, header = F)
 
 # OK, now let's proportion of smokers in this same framework
 
@@ -142,7 +142,8 @@ m2 <- felm(numeric_smokestatus ~ zeroed_year*numeric_aca | race + age + sex + ed
 m3 <- felm(numeric_smokestatus ~ zeroed_year*numeric_aca*numeric_insurance | race + age + sex + educ + hispanic,
            data = df, weights = df$PERWEIGHT)
 
-stargazer(m2,m3, header = F, type = "text")
+stargazer(m2, header = F, covariate.labels = c("Pre-Trend", "Discontinuity Effect", "Interaction Effect"), 
+          dep.var.labels = "Proportion of Smokers")
 
 
 
@@ -161,7 +162,19 @@ smokequit_count <-
             N_Total = n()) %>% 
   mutate(prop_yes = N_Yes/(N_Yes + N_No))
 
-smokequit_count %>%
-  ggplot(aes(x=YEAR, y=prop_yes*100)) +
-  geom_point() + geom_smooth(model = lm) + 
-  labs(x = "Year", y = "%")
+
+
+
+df <-
+  df %>%
+  mutate(aca = YEAR >= 2011,
+         zeroed_year = as.numeric(YEAR) - 2011,
+         numeric_insurance = ifelse(any_insurance == "Yes", 1, 0),
+         numeric_smokequit = ifelse(smokequit == "Yes", 1, 0),
+         numeric_aca = ifelse(aca == T, 1, 0))
+
+m4 <- felm(numeric_smokequit ~ zeroed_year*numeric_aca | race + age + sex + educ + hispanic,
+           data = df, weights = df$PERWEIGHT)
+
+stargazer(m4, header = F, covariate.labels = c("Pre-Trend", "Discontinuity Effect", "Interaction Effect"), 
+          dep.var.labels = "Proportion Tried to Quit")
