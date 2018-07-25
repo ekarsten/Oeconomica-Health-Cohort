@@ -1,0 +1,5 @@
+\beamer@sectionintoc {1}{The Options}{2}{0}{1}
+\beamer@sectionintoc {2}{Simple Example}{6}{0}{2}
+\beamer@sectionintoc {3}{Speed Tricks}{17}{0}{3}
+\beamer@sectionintoc {4}{Proof}{20}{0}{4}
+\beamer@sectionintoc {5}{Concluding Thoughts}{24}{0}{5}

@@ -1,0 +1,635 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[ignorenonframetext,]{beamer}
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+\usetheme[]{Singapore}
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{hyperref}
+\hypersetup{
+            pdftitle={The Case for data.table},
+            pdfauthor={Eric Karsten},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\newif\ifbibliography
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+% Prevent slide breaks in the middle of a paragraph:
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+\centering
+\begin{beamercolorbox}[sep=16pt,center]{part title}
+  \usebeamerfont{part title}\insertpart\par
+\end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+\centering
+\begin{beamercolorbox}[sep=12pt,center]{part title}
+  \usebeamerfont{section title}\insertsection\par
+\end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+\centering
+\begin{beamercolorbox}[sep=8pt,center]{part title}
+  \usebeamerfont{subsection title}\insertsubsection\par
+\end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+\title{The Case for data.table}
+\author{Eric Karsten}
+\date{25 July, 2018}
+
+\begin{document}
+\frame{\titlepage}
+
+\hypertarget{the-options}{%
+\section{The Options}\label{the-options}}
+
+\begin{frame}[fragile]{Base R}
+\protect\hypertarget{base-r}{}
+
+Pros:
+
+\begin{itemize}
+\tightlist
+\item
+  It's the first thing you learn
+\end{itemize}
+
+Cons:
+
+\begin{itemize}
+\tightlist
+\item
+  Code is unreadable
+\item
+  Iterative processes require for loops (unclear) or
+\item
+  calling the \texttt{apply} function (slow)
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{dplyr and the tidyverse}
+\protect\hypertarget{dplyr-and-the-tidyverse}{}
+
+Pros:
+
+\begin{itemize}
+\tightlist
+\item
+  The syntax is very readable
+\item
+  Major speed improvements over base R
+\item
+  More complex aggregations possible
+\end{itemize}
+
+Cons:
+
+\begin{itemize}
+\tightlist
+\item
+  You will eventually come across aggregations you can't do
+\item
+  It's a little slow when you start doing big stuff
+\item
+  You can't poke around the backend code easily (it's in C++)
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{data.table}
+\protect\hypertarget{data.table}{}
+
+Pros:
+
+\begin{itemize}
+\tightlist
+\item
+  Almost every aggregation you can think of is possible
+\item
+  Some speed improvements over dplyr (task-dependent)
+\item
+  Significanlty more efficient use of RAM than dplyr or base R
+\end{itemize}
+
+Cons:
+
+\begin{itemize}
+\tightlist
+\item
+  Sytax is hard to read
+\item
+  You have to know what you are doing to get the most efficiency out of
+  it (this presentation will help with that!)
+\item
+  You can't poke around the backend code easily (it's in C++)
+\end{itemize}
+
+\end{frame}
+
+\hypertarget{simple-example}{%
+\section{Simple Example}\label{simple-example}}
+
+\begin{frame}[fragile]{Our Data}
+\protect\hypertarget{our-data}{}
+
+This is a super simple example so that you can see all the parts.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# you may need to `install.packages("data.table")`}
+
+\KeywordTok{library}\NormalTok{(data.table)}
+
+\NormalTok{df <-}
+\StringTok{  }\KeywordTok{data.table}\NormalTok{(}
+    \DataTypeTok{Animal =} \KeywordTok{c}\NormalTok{(}\StringTok{"Dog"}\NormalTok{, }\StringTok{"Cat"}\NormalTok{, }\StringTok{"Dog"}\NormalTok{,}
+               \StringTok{"Raven"}\NormalTok{, }\StringTok{"Cat"}\NormalTok{), }
+    \DataTypeTok{Weight =} \KeywordTok{c}\NormalTok{(}\DecValTok{100}\NormalTok{, }\DecValTok{40}\NormalTok{, }\DecValTok{80}\NormalTok{, }\DecValTok{16}\NormalTok{, }\DecValTok{50}\NormalTok{),}
+    \DataTypeTok{Height =} \KeywordTok{c}\NormalTok{(}\DecValTok{23}\NormalTok{, }\DecValTok{18}\NormalTok{, }\DecValTok{40}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{16}\NormalTok{),}
+    \DataTypeTok{Family =} \KeywordTok{c}\NormalTok{(}\StringTok{"Mammal"}\NormalTok{, }\StringTok{"Mammal"}\NormalTok{, }\StringTok{"Mammal"}\NormalTok{,}
+               \StringTok{"Bird"}\NormalTok{, }\StringTok{"Mammal"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\end{frame}
+
+\begin{frame}{The Syntax}
+\protect\hypertarget{the-syntax}{}
+
+There are three parts to a data.table command:
+
+\begin{enumerate}
+\tightlist
+\item
+  The rows to be returned
+\item
+  The columns to be returned
+\item
+  The grouping by which to perform the operations
+\end{enumerate}
+
+They are separated by commas, but commas need only be included when a
+subsequent field is occupied.
+
+\end{frame}
+
+\begin{frame}[fragile]{Some nice easy subsetting}
+\protect\hypertarget{some-nice-easy-subsetting}{}
+
+Let's just select the dogs.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df[Animal }\OperatorTok{==}\StringTok{ "Dog"}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Animal Weight Height Family
+## 1:    Dog    100     23 Mammal
+## 2:    Dog     80     40 Mammal
+\end{verbatim}
+
+Let's return the height and weight of the mammals that weigh more than
+35 lbs
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df[Weight }\OperatorTok{>}\StringTok{ }\DecValTok{35}\NormalTok{, .(Animal, Height, Weight)]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Animal Height Weight
+## 1:    Dog     23    100
+## 2:    Cat     18     40
+## 3:    Dog     40     80
+## 4:    Cat     16     50
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]{Using \texttt{:=}}
+\protect\hypertarget{using}{}
+
+Often times, we want to add new calculated columns to a dataframe. The
+correct way to do this in data.table is with a \texttt{:=}. Because this
+operation works by updating the previous object, we need to make a copy
+of it in order to avoid modifying our original data frame.
+
+The following are equivalent for computing BMI (weight/height)
+\footnote{BMI
+should technically be weight in Kg divided by height in m, but I'm not going to
+worry about the conversions}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df2 <-}\StringTok{ }\KeywordTok{copy}\NormalTok{(df)[, BMI }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\NormalTok{Weight}\OperatorTok{/}\NormalTok{Height]}
+\NormalTok{df2 <-}\StringTok{ }\KeywordTok{copy}\NormalTok{(df)[, }\StringTok{`}\DataTypeTok{:=}\StringTok{`}\NormalTok{(}\DataTypeTok{BMI =}\NormalTok{ Weight}\OperatorTok{/}\NormalTok{Height)]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Animal Weight Height Family      BMI
+## 1:    Dog    100     23 Mammal 4.347826
+## 2:    Cat     40     18 Mammal 2.222222
+## 3:    Dog     80     40 Mammal 2.000000
+## 4:  Raven     16      3   Bird 5.333333
+## 5:    Cat     50     16 Mammal 3.125000
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+We could also have done this without efficient updating. This is much
+slower on big datasets and should not be done.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df[, .(Animal, Weight, Height, Family,}
+       \DataTypeTok{BMI =}\NormalTok{ Weight}\OperatorTok{/}\NormalTok{Height)]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Animal Weight Height Family      BMI
+## 1:    Dog    100     23 Mammal 4.347826
+## 2:    Cat     40     18 Mammal 2.222222
+## 3:    Dog     80     40 Mammal 2.000000
+## 4:  Raven     16      3   Bird 5.333333
+## 5:    Cat     50     16 Mammal 3.125000
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+Selective updating is the reason why \texttt{:=} is so useful. Let's say
+we wanted to change the hieght of all ravens to be 5. We don't want to
+rewrite the whole table, so we simply call
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df[Animal }\OperatorTok{==}\StringTok{ "Raven"}\NormalTok{, Height }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\DecValTok{5}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Animal Weight Height Family
+## 1:    Dog    100     23 Mammal
+## 2:    Cat     40     18 Mammal
+## 3:    Dog     80     40 Mammal
+## 4:  Raven     16      5   Bird
+## 5:    Cat     50     16 Mammal
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]{Grouped operations}
+\protect\hypertarget{grouped-operations}{}
+
+Let's say we want the average weight by animal. Here are two ways to do
+it with different results.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df[, .(}\DataTypeTok{mean_wt =} \KeywordTok{mean}\NormalTok{(Weight)), by =}\StringTok{ }\NormalTok{.(Animal)]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Animal mean_wt
+## 1:    Dog      90
+## 2:    Cat      45
+## 3:  Raven      16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df2 <-}\StringTok{ }\KeywordTok{copy}\NormalTok{(df)[, mean_wt }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{mean}\NormalTok{(Weight), by =}\StringTok{ }\NormalTok{Animal]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Animal Weight Height Family mean_wt
+## 1:    Dog    100     23 Mammal      90
+## 2:    Cat     40     18 Mammal      45
+## 3:    Dog     80     40 Mammal      90
+## 4:  Raven     16      5   Bird      16
+## 5:    Cat     50     16 Mammal      45
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]{Chaining multiple operations in sequence}
+\protect\hypertarget{chaining-multiple-operations-in-sequence}{}
+
+Oftentimes, you want to do several operations in sequence. Naturally,
+there is syntax that reflects this workflow. Here we are computing BMI
+and then making a table of average BMI by Animal.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df[, }\StringTok{`}\DataTypeTok{:=}\StringTok{`}\NormalTok{(}\DataTypeTok{BMI =}\NormalTok{ Weight}\OperatorTok{/}\NormalTok{Height)][}
+\NormalTok{  , .(}\DataTypeTok{avg_BMI =} \KeywordTok{mean}\NormalTok{(BMI)), by =}\StringTok{ }\NormalTok{Animal]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Animal  avg_BMI
+## 1:    Dog 3.173913
+## 2:    Cat 2.673611
+## 3:  Raven 3.200000
+\end{verbatim}
+
+It should be noted that this example could be done in one line, so
+chaining was not necessary.
+
+\end{frame}
+
+\begin{frame}[fragile]{Using \texttt{.SD} tricks}
+\protect\hypertarget{using-.sd-tricks}{}
+
+There are times when we want to perform more complex operations on our
+grouped data than applying a simple built-in function. One option is to
+write a function of our own, but this isn't always the clearest. The
+better option is to manipulate the grouped data.table using standard
+data.table operations!
+
+The way we do this is by calling the \texttt{.SD} object (which is just
+a data.table of our selected data) and performing operations on it.
+
+EX: We want to add a column for the height of the heaviest individual
+within each Animal species.
+
+To do this, we need to first compute within each animal table what the
+biggest weight is, then, we need to return the height of the animal with
+that weight and assign it to the BigHeight variable for that animal
+group.
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df[, BigHeight }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\NormalTok{.SD[, .(}\DataTypeTok{BiggestWeight =} \KeywordTok{max}\NormalTok{(Weight),}
+\NormalTok{                           Weight,}
+\NormalTok{                           Height)][}
+\NormalTok{                       Weight }\OperatorTok{==}\StringTok{ }\NormalTok{BiggestWeight, Height]}
+\NormalTok{   , by =}\StringTok{ }\NormalTok{Animal]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Animal Weight Height Family      BMI BigHeight
+## 1:    Dog    100     23 Mammal 4.347826        23
+## 2:    Cat     40     18 Mammal 2.222222        16
+## 3:    Dog     80     40 Mammal 2.000000        23
+## 4:  Raven     16      5   Bird 3.200000         5
+## 5:    Cat     50     16 Mammal 3.125000        16
+\end{verbatim}
+
+I challenge you to do this in either dplyr or base R in a cleaner or
+faster way!
+
+\end{frame}
+
+\hypertarget{speed-tricks}{%
+\section{Speed Tricks}\label{speed-tricks}}
+
+\begin{frame}{Why is it so fast?}
+\protect\hypertarget{why-is-it-so-fast}{}
+
+Both data.table and dplyr are executed in C++. This allows the
+developers to use some really efficient indexing to perform their
+operations.
+
+The advantage data.table has over dplyr in the speed department is that
+it is able to update the data in RAM, it doesn't need to constantly be
+rewriting it. This saves a ton of time if you are doing thousands of
+small operations in a row. It also allows the program to run without
+eating up all your RAM!
+
+\end{frame}
+
+\begin{frame}[fragile]{How to maximize speed}
+\protect\hypertarget{how-to-maximize-speed}{}
+
+Always use \texttt{:=} when possible. You never want to rewrite your
+data.table if you don't have to.
+
+To delete a column quickly, just use \texttt{:=\ NULL} to get rid of it.
+
+If you are doing several things on the same group, don't chain the
+operations together, instead do them all at once.
+
+Merging isn't covered in this talk, but data.table can do really fast
+merging.
+
+\end{frame}
+
+\hypertarget{proof}{%
+\section{Proof}\label{proof}}
+
+\begin{frame}[fragile]{The task}
+\protect\hypertarget{the-task}{}
+
+We are going to use the microbenchmark library to find the average BMI
+of our animals, after adding 7 lbs to all the rabbits but to slow it
+down, we are going to randomly generate a ton of data.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(microbenchmark)}
+\KeywordTok{library}\NormalTok{(dplyr)}
+\NormalTok{n <-}\StringTok{ }\FloatTok{1e5}
+\NormalTok{dt_test <-}
+\StringTok{  }\KeywordTok{data.table}\NormalTok{(}\DataTypeTok{Animal =} \KeywordTok{sample}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"Rabbit"}\NormalTok{, }\StringTok{"Chicken"}\NormalTok{,}
+                               \StringTok{"Zebra"}\NormalTok{, }\StringTok{"Snake"}\NormalTok{,}
+                               \StringTok{"Giraffe"}\NormalTok{, }\StringTok{"Eagle"}\NormalTok{),}
+\NormalTok{                             n, }\DataTypeTok{replace =}\NormalTok{ T),}
+             \DataTypeTok{Height =} \KeywordTok{runif}\NormalTok{(n, }\DecValTok{3}\NormalTok{, }\DecValTok{7}\NormalTok{),}
+             \DataTypeTok{Weight =} \KeywordTok{runif}\NormalTok{(n, }\DecValTok{33}\NormalTok{, }\DecValTok{47}\NormalTok{))}
+\NormalTok{df_test <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(dt_test)}
+\NormalTok{tb_test <-}\StringTok{ }\KeywordTok{as_tibble}\NormalTok{(dt_test)}
+\end{Highlighting}
+\end{Shaded}
+
+\end{frame}
+
+\begin{frame}[fragile]{The Benchmark Setup}
+\protect\hypertarget{the-benchmark-setup}{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data_table_BMI <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(df) \{}
+\NormalTok{  df[Animal }\OperatorTok{==}\StringTok{ "Rabbit"}\NormalTok{, Weight }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\NormalTok{Weight }\OperatorTok{+}\StringTok{ }\DecValTok{7}\NormalTok{][}
+\NormalTok{    , .(}\DataTypeTok{avg_BMI=} \KeywordTok{mean}\NormalTok{(Weight}\OperatorTok{/}\NormalTok{Height)), by =}\StringTok{ }\NormalTok{Animal]\}}
+\NormalTok{dplyr_BMI <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(df) \{}
+\NormalTok{  df }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Weight =} \KeywordTok{if_else}\NormalTok{(Animal }\OperatorTok{==}\StringTok{ "Rabbit"}\NormalTok{,}
+\NormalTok{                            Weight }\OperatorTok{+}\StringTok{ }\DecValTok{7}\NormalTok{,Weight)) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{group_by}\NormalTok{(Animal) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{avg_BMI =} \KeywordTok{mean}\NormalTok{(Weight}\OperatorTok{/}\NormalTok{Height))\}}
+\NormalTok{base_R_BMI <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(df) \{}
+\NormalTok{  df}\OperatorTok{$}\NormalTok{Weight =}\StringTok{ }\KeywordTok{ifelse}\NormalTok{(df}\OperatorTok{$}\NormalTok{Animal }\OperatorTok{==}\StringTok{ "Rabbit"}\NormalTok{,}
+\NormalTok{                     df}\OperatorTok{$}\NormalTok{Weight }\OperatorTok{+}\StringTok{ }\DecValTok{7}\NormalTok{,df}\OperatorTok{$}\NormalTok{Weight)}
+  \KeywordTok{aggregate}\NormalTok{(df}\OperatorTok{$}\NormalTok{Weight}\OperatorTok{/}\NormalTok{df}\OperatorTok{$}\NormalTok{Height,}
+            \DataTypeTok{by=}\KeywordTok{list}\NormalTok{(}\DataTypeTok{Animal=}\NormalTok{df}\OperatorTok{$}\NormalTok{Animal),}
+            \DataTypeTok{FUN=}\NormalTok{mean)\}}
+\end{Highlighting}
+\end{Shaded}
+
+\end{frame}
+
+\begin{frame}[fragile]{Benchmark Results}
+\protect\hypertarget{benchmark-results}{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{res <-}
+\StringTok{  }\KeywordTok{microbenchmark}\NormalTok{(}
+    \KeywordTok{data_table_BMI}\NormalTok{(dt_test),}
+    \KeywordTok{dplyr_BMI}\NormalTok{(tb_test),}
+    \KeywordTok{base_R_BMI}\NormalTok{(df_test))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 3 x 4
+##   Method      Mean Median    SD
+##   <chr>      <dbl>  <dbl> <dbl>
+## 1 Base R     67.5   67.0   5.08
+## 2 data.table  7.42   7.19  0.93
+## 3 dplyr      12.3   10.6   6.3
+\end{verbatim}
+
+\end{frame}
+
+\hypertarget{concluding-thoughts}{%
+\section{Concluding Thoughts}\label{concluding-thoughts}}
+
+\begin{frame}{A Handy Guide}
+\protect\hypertarget{a-handy-guide}{}
+
+\begin{itemize}
+\tightlist
+\item
+  If you data is less than 100 rows, skip the computer and do it with
+  pencil and paper, it really doesn't even matter
+\item
+  Less than 1000 and everything will feel fast
+\item
+  Less than 1,000,000 and dplyr should be alright
+\item
+  Less than 10,000,000 and data.table will work on your laptop
+\item
+  Otherwise, it's time to go shopping for server space
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Thank You}
+\protect\hypertarget{thank-you}{}
+
+A much more comprehensive data.table guide is provided here:
+\url{https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.html}
+
+\end{frame}
+
+\end{document}

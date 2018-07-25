@@ -1,0 +1,22 @@
+\frametitle{Benchmark Results}
+\protect\hypertarget{benchmark-results}{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{res <-}
+\StringTok{  }\KeywordTok{microbenchmark}\NormalTok{(}
+    \KeywordTok{data_table_BMI}\NormalTok{(dt_test),}
+    \KeywordTok{dplyr_BMI}\NormalTok{(tb_test),}
+    \KeywordTok{base_R_BMI}\NormalTok{(df_test))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 3 x 4
+##   Method      Mean Median    SD
+##   <chr>      <dbl>  <dbl> <dbl>
+## 1 Base R     67.5   67.0   5.08
+## 2 data.table  7.42   7.19  0.93
+## 3 dplyr      12.3   10.6   6.3
+\end{verbatim}
+
